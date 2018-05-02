@@ -1,0 +1,208 @@
+<!--slider credits to https://codepen.io/thehonestape/pen/yjlGi -->
+
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title><%= title %></title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+            crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+            crossorigin="anonymous"></script>
+    <link rel='stylesheet' href='/stylesheets/game.css'/>
+</head>
+<body>
+
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">Navbar</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
+            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+        <div class="navbar-nav">
+            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
+            <a class="nav-item nav-link" href="#">Features</a>
+            <a class="nav-item nav-link" href="#">Pricing</a>
+            <a class="nav-item nav-link disabled" href="#">Disabled</a>
+        </div>
+    </div>
+
+
+</nav>
+
+
+<div id="container">
+    <div id = "game">
+        <div id = "top-player">
+            <div id="space">
+            </div>
+            <div id = "opponents-top-cards">
+                <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+            </div>
+
+            <div id = "opponent-top-bank-roll">
+                <div id = "bank">
+                    <div id = "name">
+                        <h6><strong>Player 2</strong></h6>
+                    </div>
+
+                    <div id = "bank">
+                        <strong>Bank:</strong>
+                        $1000
+                    </div>
+
+                    <div id = "status">
+                        <strong>Last Action:</strong>
+                        Bet $100
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        <div id = "middle">
+
+            <div id = "left-player">
+                <div id = "opponents-left-cards">
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                </div>
+
+                <div id = "opponent-left-bank-roll">
+                    <div id = "bank">
+                        <div id = "name">
+                            <h6><strong>Player 2</strong></h6>
+                        </div>
+
+                        <div id = "bank">
+                            <strong>Bank:</strong>
+                            $1000
+                        </div>
+
+                        <div id = "status">
+                            <strong>Last Action:</strong>
+                            Bet $100
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id = "table">
+                <h4><strong>COMMUNITY</strong></h4>
+                <div id = "community">
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                </div>
+
+                <div id = "chips">
+
+                    <div id = "pot">
+                        <h6><strong>Pot:</strong></h6>
+                        $2000
+                    </div>
+
+                    <div id = "current-bet">
+                        <h6><strong>Last Action:</strong></h6>
+                        Player 1 bets $100
+                    </div>
+                </div>
+            </div>
+
+            <div id = "right-player">
+
+                <div id = "opponents-right-cards">
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+
+                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                </div>
+
+                <div id = "opponent-right-bank-roll">
+                    <div id = "bank">
+                        <div id = "name">
+                            <h6><strong>Player 2</strong></h6>
+                        </div>
+
+                        <div id = "bank">
+                            <strong>Bank:</strong>
+                            $1000
+                        </div>
+
+                        <div id = "status">
+                            <strong>Last Action:</strong>
+                            Bet $100
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+        <div id = "player">
+
+            <div id = "turn">
+                <strong>Player 2's Turn</strong>
+            </div>
+
+            <div id = "cards">
+                <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+
+                <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+            </div>
+
+            <div id = "controls">
+                <div id = "playerbank">
+                    <p id ="playermount">
+
+                        <strong>Bank:</strong>$1000
+                    </p>
+                </div>
+
+
+                <div id = "buttons">
+                    <button id="check" type="button" class="btn btn-warning" disabled>Check</button>
+                    <button id="call" type="button" class="btn btn-primary">Call</button>
+                    <button id="bet" type="button" class="btn btn-success">Bet</button>
+                   <button id="fold" type="button" class="btn btn-danger">Fold</button>
+                </div>
+
+                <div class="slider">
+                    <input type = "range" min="0" max="100" onchange="rangevalue.value=value"/>
+                    <output id="rangevalue">50</output>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div id = "chat">
+        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aperiam at beatae delectus dolore ducimus eos in itaque minima mollitia natus necessitatibus nihil nostrum nulla officia recusandae, repudiandae soluta suscipit?
+    </div>
+
+
+
+</div>
+</body>
+
+</html>
