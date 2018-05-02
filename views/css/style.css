@@ -1,0 +1,42 @@
+body{background:#fff;width:100%}
+ul.err-area li{color:red}
+.data-table{float:left;display:inline-block}
+.data-table table{border-collapse:collapse;border:1px solid #ddd;}
+.page-data{float:left;display:inline-block;}
+#map{margin-top:217px; height:300px;background-color:gray;}
+
+#license
+{
+    display:none;
+}
+#seller:checked ~ #license {
+    display:block;
+}
+
+body {
+  padding-top: 54px;
+}
+
+@media (min-width: 992px) {
+  body {
+    padding-top: 56px;
+  }
+}
+
+.portfolio-item {
+  margin-bottom: 30px;
+}
+
+.pagination {
+  margin-bottom: 30px;
+}
+#footer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px; /* Height of the footer */
+}
+
+.well {
+    border-style:solid;
+}
