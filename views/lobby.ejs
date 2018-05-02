@@ -87,8 +87,14 @@
 
             $messageForm.submit(function(e){
                 e.preventDefault();
-                socket.emit('send message', $message.val());
-                $message.val('');
+                if($message.val().length>0){
+                    socket.emit('send message', $message.val());
+                    $message.val('');
+                }
+                else{
+                    //Do nothing
+                }
+
             });
 
             socket.on('new message', function(data){
