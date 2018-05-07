@@ -1,14 +1,11 @@
 const express = require('express');
 const app = express();
 const path = require('path');
-const server = require('http').createServer(app);
-const io = require('socket.io').listen(server);
+
 const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-
-server.listen(process.env.PORT || 8080);
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -16,47 +13,11 @@ const test = require('./routes/test');
 const lobby = require('./routes/lobby');
 const db = require('./db/DbInit');
 
-const list_users = [];
-const connections = [];
-
-io.sockets.on('connection', function(socket){
-    connections.push(socket);
-    console.log('Connected: %s sockets connected', connections.length);
-
-    //Disconnect
-    socket.on('disconnect', function(data){
-        list_users.splice(list_users.indexOf(socket.username),1);
-        updateUsernames();
-        connections.splice(connections.indexOf(socket), 1);
-        console.log('Disconnected: %s sockets connected', connections.length);
-    });
-
-    //Send Message
-    socket.on('send message', function(data){
-        io.sockets.emit('new message', {msg:data, user:socket.username});
-    });
-
-    //New User
-    socket.on('new user', function(data, callback){
-        callback(true);
-        socket.username = data;
-        list_users.push(socket.username);
-        updateUsernames();
-    });
-
-    function updateUsernames(){
-        io.sockets.emit('get users', list_users);
-    }
-})
-
 if(process.env.NODE_ENV === 'development') {
     require("dotenv").config();
 }
 
-
-
 console.log('Server running...');
-
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -64,6 +25,7 @@ app.set('view engine', 'ejs');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
+app.io = require('./sockets');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
