@@ -12,7 +12,7 @@ const users = require('./routes/users');
 const test = require('./routes/test');
 const lobby = require('./routes/lobby');
 const game = require('./routes/game');
-const db = require('./db/DbInit');
+const db = require('./db/dbInit');
 
 if(process.env.NODE_ENV === 'development') {
     require("dotenv").config();
