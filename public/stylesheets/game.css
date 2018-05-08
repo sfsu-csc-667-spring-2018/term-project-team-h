@@ -1,0 +1,303 @@
+#container{
+    display:flex;
+    flex-direction: row;
+    min-height: 100%;
+}
+
+body{
+    min-height: 100%;
+}
+#game{
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    flex: 4;
+}
+
+#top-player{
+    margin-top: 5%;
+    display:flex;
+    flex-direction: row;
+    flex: 1.25;
+    min-height: 20%;
+    align-items: center;
+    min-width: 100%;
+}
+
+#space{
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    justify-items: center;
+    align-items: center;
+    font-size: 20px;
+}
+
+#opponents-top-cards{
+    flex: 1;
+    display:flex;
+    align-items:center;
+    justify-content: center;
+}
+
+#opponent-top-bank-roll{
+    display: flex;
+    flex: 1;
+    align-items: center;
+    justify-items: center;
+}
+
+#name{
+    flex: 1;
+}
+
+#bank{
+    flex: 1;
+}
+
+#status{
+    flex: 1;
+}
+#middle{
+    display: flex;
+    flex: 3;
+    align-items: center;
+    flex-direciton: row;
+    min-height: 90%;
+    min-width: 100%;
+}
+
+#card{
+    width: 80px;
+    height: 130px;
+}
+
+#flop1{
+    width: 80px;
+    height: 130px;
+    flex: 1;
+}
+
+#flop2{
+    width: 80px;
+    height: 130px;
+    flex: 1
+}
+
+#flop3{
+    width: 80px;
+    height: 130px;
+    flex: 1
+}
+
+#river{
+    width: 80px;
+    height: 130px;
+    flex: 1;
+}
+
+#turn{
+    width: 80px;
+    height: 130px;
+    flex: 1;
+}
+
+#player-left-card{
+    width: 80px;
+    height: 130px;
+}
+
+#player-right-card{
+    width: 80px;
+    height: 130px;
+}
+
+
+
+#table{
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    flex: 2;
+}
+
+#community{
+    display:flex;
+    flex-wrap: nowrap;
+    flex-direction: row;
+    align-items: center;
+}
+
+#chat{
+    display:flex;
+}
+
+#right-player{
+    display:flex;
+    flex: 1;
+    align-items: center;
+    flex-direction: row;
+
+}
+
+#opponents-right-cards{
+    flex: 1;
+    align-items: center;
+    justify-content: center;
+    display:flex;
+    flex-direction: row;
+    transform: rotate(90deg);
+}
+
+
+
+#opponent-right-bank-roll{
+    display: flex;
+    flex: 1
+    flex-direction: column;
+    min-height: 100%;
+}
+
+#bank{
+    display:flex;
+    flex-direction: column;
+}
+
+
+
+#left-player{
+    display:flex;
+    flex: 1;
+    align-items: center;
+    flex-direction: row-reverse;
+}
+
+
+#turn{
+    display:flex;
+    font-weight: bold;
+    align-items: center;
+    justify-items: center;
+    justify-content: right;
+    font-size: 30px;
+    flex: 1;
+}
+
+#chips{
+    min-width: 100%;
+    min-height: 100%;
+    flex: 1;
+    display:flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#pot{
+    flex: 1;
+    text-align:center;
+}
+
+#current-bet{
+    flex: 1;
+    text-align:center;
+}
+
+
+#opponents-left-cards{
+    flex: 1;
+    display:flex;
+    flex-direction: row;
+    align-items: center;
+    transform: rotate(90deg);
+}
+
+#opponent-left-bank-roll{
+    display: flex;
+    flex: 1;
+    align-content: right;
+}
+
+#player{
+    display: flex;
+    flex: 1;
+    min-width: 100%;
+}
+
+#cards{
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    flex: 1;
+    justify-content: center;
+}
+
+
+#controls{
+    display:flex;
+    align-items: center;
+    flex-direction: column;
+    flex: 1;
+
+}
+
+#bankroll{
+    flex: 1;
+}
+
+#chat{
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+
+.slider {
+    width: 50%;
+    margin: 10% auto;
+}
+
+input[type="range"] {
+    -webkit-appearance: none !important;
+    width: 100%;
+    height: 15px;
+    background-color: #A3CD99;
+    border: 1px solid #97c68b;
+    border-radius: 10px;
+    margin: auto;
+    transition: all 0.3s ease;
+}
+input[type="range"]:hover {
+    background-color: #b2d5aa;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none !important;
+    width: 20px;
+    height: 20px;
+    background-color: #579E81;
+    border-radius: 30px;
+    box-shadow: 0px 0px 3px #3c6d59;
+    transition: all 0.5s ease;
+}
+input[type="range"]::-webkit-slider-thumb:hover {
+    background-color: #457d66;
+}
+input[type="range"]::-webkit-slider-thumb:active {
+    box-shadow: 0px 0px 1px #3c6d59;
+}
+
+#rangevalue {
+    text-align: center;
+    font-family: "Quantico", sans-serif;
+    font-size: 18px;
+    display: block;
+    margin: auto;
+    padding: 10px 0px;
+    width: 100%;
+    color: #579E81;
+}
+
+
+/*slider credits to https://codepen.io/thehonestape/pen/yjlGi*/
