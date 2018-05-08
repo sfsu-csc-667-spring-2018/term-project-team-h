@@ -114,6 +114,10 @@
                 $users.html(html);
             });
 
+            socket.on('event', function(data){
+                console.log(data.string);
+            });
+
 
         });
     </script>

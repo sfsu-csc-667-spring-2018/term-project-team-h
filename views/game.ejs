@@ -1,4 +1,5 @@
 <!--slider credits to https://codepen.io/thehonestape/pen/yjlGi -->
+<!--card assets credits to https://opengameart.org/content/playing-cards-vector-png -->
 
 
 <!DOCTYPE html>
@@ -17,6 +18,8 @@
             integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
             crossorigin="anonymous"></script>
     <link rel='stylesheet' href='/stylesheets/game.css'/>
+    <link rel='stylesheet' href='/stylesheets/game.css'/>
+    <script type="text/javascript" src="scripts/game.js"></script>
 </head>
 <body>
 
@@ -59,12 +62,16 @@
 
                     <div id = "bank">
                         <strong>Bank:</strong>
-                        $1000
+                        <div id = "topamount">
+                            1000
+                        </div>
                     </div>
 
                     <div id = "status">
                         <strong>Last Action:</strong>
-                        Bet $100
+                        <div id = "topaction">
+                            Bet $100
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,12 +95,16 @@
 
                         <div id = "bank">
                             <strong>Bank:</strong>
-                            $1000
+                            <div id ="leftamount">
+                                1000
+                            </div>
                         </div>
 
                         <div id = "status">
                             <strong>Last Action:</strong>
-                            Bet $100
+                            <div id = "leftaction">
+                                Bet 100
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -102,27 +113,31 @@
             <div id = "table">
                 <h4><strong>COMMUNITY</strong></h4>
                 <div id = "community">
-                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                    <img id = "flop1" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
 
-                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                    <img id = "flop2" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
 
-                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                    <img id = "flop3" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
 
-                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                    <img id = "turn"  src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
 
-                    <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                    <img id = "river" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
                 </div>
 
                 <div id = "chips">
 
                     <div id = "pot">
                         <h6><strong>Pot:</strong></h6>
-                        $2000
+                        <div id = "potamount">
+                            2000
+                        </div>
                     </div>
 
                     <div id = "current-bet">
                         <h6><strong>Last Action:</strong></h6>
-                        Player 1 bets $100
+                        <div id = "lastaction">
+                            Player 1 bets 100
+                        </div>
                     </div>
                 </div>
             </div>
@@ -143,12 +158,14 @@
 
                         <div id = "bank">
                             <strong>Bank:</strong>
-                            $1000
+                            <div id = "rightamount">1000</div>
                         </div>
 
                         <div id = "status">
                             <strong>Last Action:</strong>
-                            Bet $100
+                            <div id = "rightaction">
+                                Bet 100
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -164,29 +181,27 @@
             </div>
 
             <div id = "cards">
-                <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                <img id = "player-left-card" src="/images/2_of_clubs.png">
 
-                <img id = "card" src="https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png">
+                <img id = "player-right-card" src="/images/3_of_clubs.png">
             </div>
 
             <div id = "controls">
                 <div id = "playerbank">
-                    <p id ="playermount">
-
-                        <strong>Bank:</strong>$1000
-                    </p>
+                    <strong>Bank:</strong>
+                    <p id ="playeramount">1000</p>
                 </div>
 
 
                 <div id = "buttons">
-                    <button id="check" type="button" class="btn btn-warning" disabled>Check</button>
+                    <button id="check" type="button" class="btn btn-warning">Check</button>
                     <button id="call" type="button" class="btn btn-primary">Call</button>
                     <button id="bet" type="button" class="btn btn-success">Bet</button>
                    <button id="fold" type="button" class="btn btn-danger">Fold</button>
                 </div>
 
                 <div class="slider">
-                    <input type = "range" min="0" max="100" onchange="rangevalue.value=value"/>
+                    <input id = "slider" type = "range" min="0" max="100" onchange="rangevalue.value=value"/>
                     <output id="rangevalue">50</output>
                 </div>
 
@@ -197,8 +212,21 @@
     </div>
 
     <div id = "chat">
-        Lorem ipsum dolor sit amet, consectetur adipisicing elit. Aliquam aperiam at beatae delectus dolore ducimus eos in itaque minima mollitia natus necessitatibus nihil nostrum nulla officia recusandae, repudiandae soluta suscipit?
-    </div>
+        <div class='row' id="messageArea">
+            <div class='col-md-8'>
+                <div class='chat' id='chat'></div>
+                <form id="messageForm">
+                    <div class='form-group'>
+                        <label>Enter Message</label>
+                        <textarea class='form-control' id='message'></textarea>
+                        <br />
+                        <input type='submit' class='btn btn-primary' value='Send Message'>
+                    </div>
+                </form>
+
+
+            </div>
+        </div></div>
 
 
 
