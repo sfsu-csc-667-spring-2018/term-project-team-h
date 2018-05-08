@@ -11,6 +11,7 @@ const index = require('./routes/index');
 const users = require('./routes/users');
 const test = require('./routes/test');
 const lobby = require('./routes/lobby');
+const game = require('./routes/game');
 const db = require('./db/DbInit');
 
 if(process.env.NODE_ENV === 'development') {
@@ -36,8 +37,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', index);
 app.use('/users', users);
 app.use('/test', test);
-app.use('/lobby', lobby)
-
+app.use('/lobby', lobby);
+app.use('/game', game);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
