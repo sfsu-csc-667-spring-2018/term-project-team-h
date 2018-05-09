@@ -10,9 +10,6 @@ $(function () {
         $('#messages').append($('<li>').text(msg));
     });
 
-    socket.on('bet', function(data){
-        console.log("recieved");
-        bet({player: data.player, amount: data.amount});
-    });
+
 
 });
