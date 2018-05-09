@@ -1,14 +1,21 @@
-var player = "hello", leftPlayer = "yes", rightPlayer = "fuck", topPlayer = "shit";
-var currentbet = 0, blind = 0, bigblind = "";
+var player = "player", leftPlayer = "leftplayer", rightPlayer = "rightplayer", topPlayer = "shit";
+var currentbet = 0, blind = 0, bigBlindPlayer = "", playerIndex = 0;
 
 
 $(document).ready(function(){
     setPlayerTurn(100);
+    addPlayer({name: "hello", index: 1});
+    addPlayer({name: "top", index: 2});
+    addPlayer({name: "right", index: 3});
+
+    const socket = io();
+
 
     document.getElementById("bet").addEventListener("click", function(){
         var amount = document.getElementById("rangevalue").value;
         if(amount <= parseInt(document.getElementById("playeramount").innerHTML)){
-            bet({player: player, amount: amount});
+            console.log("yes");
+            socket.emit('bet', {player: player, amount: amount});
         }
     });
     document.getElementById("fold").addEventListener("click", function(){
@@ -18,7 +25,6 @@ $(document).ready(function(){
         setTurn({value: 3, suit: "diamonds"});
     });
     document.getElementById("call").addEventListener("click", function(){
-        setRiver({value: 3, suit: "diamonds"});
     });
 
 
@@ -33,6 +39,28 @@ $(document).ready(function(){
 
 function updateBoard(data){
 
+}
+
+function addPlayer(data){
+    let check = data.index - playerIndex;
+    switch(check){
+        case 1:
+        case -3:
+            leftPlayer = data.name;
+            document.getElementById("left-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
+            break;
+        case 2:
+        case -2:
+            topPlayer = data.name;
+            document.getElementById("top-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
+            break;
+        case 3:
+        case -1:
+            rightPlayer = data.name;
+            document.getElementById("right-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
+            break;
+
+    }
 }
 
 function setFlop(cards){
@@ -118,6 +146,7 @@ function setAction(data){
     }
 }
 
+//data fields: player, amount
 function bet(data){
     setPlayerBank({player: data.player, amount: ( -1 * data.amount ) });
     setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(data.amount));
@@ -125,6 +154,7 @@ function bet(data){
     setAction({player: data.player, action: "bet", amount: data.amount});
 }
 
+//data fields: player, amount
 function call(data) {
     setPlayerBank({player: data.player, amount: (-1 * data.amount)});
     setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + data.amount);
@@ -132,6 +162,7 @@ function call(data) {
     setAction({player: data.player, action: "called", amount: data.amount});
 }
 
+//data fields: player
 function fold(data){
     setLastAction(data.player + " Folded");
     switch(data.player){
@@ -165,6 +196,14 @@ function setPlayerTurn(currentBet){
         document.getElementById("call").disabled = true;
         document.getElementById("fold").disabled = false;
     }
+
+    if (document.getElementById("slider").value / 100 * parseInt(document.getElementById("playeramount").innerHTML) < currentbet + 25) {
+        document.getElementById("rangevalue").value = currentbet + 25;
+    } else {
+        document.getElementById("rangevalue").value = document.getElementById("slider").value / 100 * parseInt(document.getElementById("playeramount").innerHTML);
+    }
+
+
 }
 
 function setBlind(number){
