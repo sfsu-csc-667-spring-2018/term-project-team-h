@@ -4,22 +4,17 @@
 
 <!DOCTYPE html>
 <html>
+
 <head>
     <title><%= title %></title>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
           integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
-            integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
-            crossorigin="anonymous"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
-            integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
-            crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
     <link rel='stylesheet' href='/stylesheets/game.css'/>
-    <link rel='stylesheet' href='/stylesheets/game.css'/>
+    <script type="text/javascript" src="scripts/chat.js"></script>
     <script type="text/javascript" src="scripts/game.js"></script>
+    <link rel='stylesheet' href='/stylesheets/chat.css'/>
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
 
@@ -56,7 +51,7 @@
 
             <div id = "opponent-top-bank-roll">
                 <div id = "bank">
-                    <div id = "name">
+                    <div id = "top-name">
                         <h6><strong>Player 2</strong></h6>
                     </div>
 
@@ -89,7 +84,7 @@
 
                 <div id = "opponent-left-bank-roll">
                     <div id = "bank">
-                        <div id = "name">
+                        <div id = "left-name">
                             <h6><strong>Player 2</strong></h6>
                         </div>
 
@@ -152,7 +147,7 @@
 
                 <div id = "opponent-right-bank-roll">
                     <div id = "bank">
-                        <div id = "name">
+                        <div id = "right-name">
                             <h6><strong>Player 2</strong></h6>
                         </div>
 
@@ -212,18 +207,10 @@
     </div>
 
     <div id = "chat">
-        <div class='row' id="messageArea">
-            <div class='col-md-8'>
-                <div class='chat' id='chat'></div>
-                <form id="messageForm">
-                    <div class='form-group'>
-                        <label>Enter Message</label>
-                        <textarea class='form-control' id='message'></textarea>
-                        <br />
-                        <input type='submit' class='btn btn-primary' value='Send Message'>
-                    </div>
-                </form>
-
+        <ul id="messages"></ul>
+        <form action="">
+            <input id="m" autocomplete="off" /><button>Send</button>
+        </form>
 
             </div>
         </div></div>
