@@ -1,30 +1,32 @@
 var player = "player", leftPlayer = "leftplayer", rightPlayer = "rightplayer", topPlayer = "shit";
 var currentbet = 0, blind = 0, bigBlindPlayer = "", playerIndex = 0;
-
+let socket;
 
 $(document).ready(function(){
-    setPlayerTurn(100);
+    socket = io();
+
     addPlayer({name: "hello", index: 1});
     addPlayer({name: "top", index: 2});
     addPlayer({name: "right", index: 3});
-
-    const socket = io();
-
+    player = Math.random() * 100;
+    socket.emit('new player', player);
 
     document.getElementById("bet").addEventListener("click", function(){
         var amount = document.getElementById("rangevalue").value;
-        if(amount <= parseInt(document.getElementById("playeramount").innerHTML)){
-            console.log("yes");
-            socket.emit('bet', {player: player, amount: amount});
-        }
+        socket.emit('bet', {player: player, amount: amount});
     });
+
     document.getElementById("fold").addEventListener("click", function(){
-        setFlop({onevalue: 3, twovalue: 9,threevalue: 10, onesuit: "diamonds", threesuit: "diamonds", twosuit: "diamonds"});
+        socket.emit('fold', {player: player});
+        disableButtons();
     });
+
     document.getElementById("check").addEventListener("click", function(){
-        setTurn({value: 3, suit: "diamonds"});
+        socket.emit('check', player);
     });
     document.getElementById("call").addEventListener("click", function(){
+        socket.emit('call', {player: player});
+
     });
 
 
@@ -37,27 +39,30 @@ $(document).ready(function(){
     });
 });
 
-function updateBoard(data){
-
-}
 
 function addPlayer(data){
     let check = data.index - playerIndex;
     switch(check){
         case 1:
         case -3:
-            leftPlayer = data.name;
-            document.getElementById("left-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
+            if(data.name != leftPlayer) {
+                leftPlayer = data.name;
+                document.getElementById("left-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
+            }
             break;
         case 2:
         case -2:
+            if(data.name != topPlayer){
             topPlayer = data.name;
             document.getElementById("top-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
+            }
             break;
         case 3:
         case -1:
-            rightPlayer = data.name;
-            document.getElementById("right-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
+            if(data.name != rightPlayer) {
+                rightPlayer = data.name;
+                document.getElementById("right-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
+            }
             break;
 
     }
@@ -132,6 +137,12 @@ function setPlayerBank(data){
     }
 }
 
+function disableButtons(){
+    document.getElementById("check").disabled = true;
+    document.getElementById("call").disabled = true;
+    document.getElementById("fold").disabled = true;
+    document.getElementById("bet").disabled = true;
+}
 function setAction(data){
     switch(data.player){
         case leftPlayer:
@@ -169,15 +180,19 @@ function fold(data){
         case player:
             document.getElementById("player-left-card").style.visibility= "hidden";
             document.getElementById("player-right-card").style.visibility= "hidden";
+            break;
         case topPlayer:
             document.getElementById("opponents-top-cards").children[0].style.visibility= "hidden";
             document.getElementById("opponents-top-cards").children[1].style.visibility= "hidden";
+            break;
         case leftPlayer:
             document.getElementById("opponents-left-cards").children[0].style.visibility= "hidden";
             document.getElementById("opponents-left-cards").children[1].style.visibility= "hidden";
+            break;
         case rightPlayer:
             document.getElementById("opponents-right-cards").children[0].style.visibility= "hidden";
             document.getElementById("opponents-right-cards").children[1].style.visibility= "hidden";
+            break;
     }
 
     setAction({player: data.player, action: "fold", amount: ""});
@@ -251,3 +266,50 @@ function claimBlinds(name){
             break;
     }
 }
+
+
+//socket.io functions
+$(function () {
+    socket.on('bet', function(data){
+        bet(data);
+    });
+
+    socket.on('fold', function(data){
+        fold(data);
+    });
+
+    socket.on('call', function(data){
+       call(data);
+    });
+
+    socket.on('players', function(data){
+        console.log(data);
+    });
+
+    socket.on('users', function(data){
+        for(let i = 0; i < data.length; i++){
+            addPlayer({name: data[i], index: i});
+        }
+
+    });
+
+    socket.on(player, function(data){
+       playerIndex = data.playerIndex;
+       console.log(playerIndex);
+    });
+
+    socket.on('setTurn', function(data){
+       if(data.player == player){
+           setPlayerTurn(data.amount);
+           document.getElementById("turn").innerHTML = "<strong> YOUR TURN! </strong>";
+           setPlayerTurn(data.amount);
+
+       }else{
+           document.getElementById('turn').innerHTML = "<strong>" + data.player + "'s Turn" + "</strong>";
+           disableButtons();
+       }
+
+    });
+
+
+});
