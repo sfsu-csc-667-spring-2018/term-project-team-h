@@ -16,10 +16,6 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false
       },
-      cardValue: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
     });
     /*
       Add altering commands here.
