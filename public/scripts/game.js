@@ -1,13 +1,10 @@
-var player = "player", leftPlayer = "leftplayer", rightPlayer = "rightplayer", topPlayer = "shit";
-var currentbet = 0, blind = 0, bigBlindPlayer = "", playerIndex = 0;
+var player = "", leftPlayer = "", rightPlayer = "", topPlayer = "";
+var currentbet = 0, blind = 10, bigBlindPlayer = "", playerIndex = 0;
 let socket;
 
 $(document).ready(function(){
     socket = io();
 
-    addPlayer({name: "hello", index: 1});
-    addPlayer({name: "top", index: 2});
-    addPlayer({name: "right", index: 3});
     player = Math.random() * 100;
     socket.emit('new player', player);
 
@@ -205,7 +202,12 @@ function setPlayerTurn(currentBet){
         document.getElementById("call").disabled = false;
         document.getElementById("fold").disabled = false;
         document.getElementById("bet").disabled = false;
-    } else{
+    } else if(currentBet >= parseInt(document.getElementById("playeramount").innerHTML)){
+        document.getElementById("check").disabled = true;
+        document.getElementById("call").disabled = false;
+        document.getElementById("fold").disabled = false;
+        document.getElementById("bet").disabled = true;
+    }else{
         document.getElementById("bet").disabled = false;
         document.getElementById("check").disabled = false;
         document.getElementById("call").disabled = true;
@@ -225,7 +227,7 @@ function setBlind(number){
     blind = number;
 }
 
-function claimBlinds(name){
+function claimBigBlinds(name){
     switch(name){
         case player:
             if(parseInt(document.getElementById("playeramount").innerHTML) <= blind){
@@ -235,6 +237,7 @@ function claimBlinds(name){
                 setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind);
                 setPlayerBank({player: name, amount: parseInt(document.getElementById("playeramount").innerHTML) - blind});
             }
+            claimSmallBlinds(rightPlayer);
             break;
         case topPlayer:
 
@@ -245,6 +248,7 @@ function claimBlinds(name){
                 setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind);
                 setPlayerBank({player: name, amount: parseInt(document.getElementById("topamount").innerHTML) - blind});
             }
+            claimSmallBlinds(leftPlayer);
             break;
         case leftPlayer:
             if(parseInt(document.getElementById("leftamount").innerHTML) <= blind){
@@ -254,6 +258,7 @@ function claimBlinds(name){
                 setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind);
                 setPlayerBank({player: name, amount: parseInt(document.getElementById("leftamount").innerHTML) - blind});
             }
+            claimSmallBlinds(player);
             break;
         case rightPlayer:
             if(parseInt(document.getElementById("rightamount").innerHTML) <= blind){
@@ -263,6 +268,86 @@ function claimBlinds(name){
                 setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind);
                 setPlayerBank({player: name, amount: parseInt(document.getElementById("rightamount").innerHTML) - blind});
             }
+            claimSmallBlinds(topPlayer);
+            break;
+    }
+}
+
+function claimSmallBlinds(name){
+    switch(name){
+        case player:
+            if(parseInt(document.getElementById("playeramount").innerHTML) <= blind / 2){
+                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("playeramount").innerHTML));
+                setPlayerBank({player: name, amount: 0});
+            }else{
+                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind / 2);
+                setPlayerBank({player: name, amount: parseInt(document.getElementById("playeramount").innerHTML) - blind / 2});
+            }
+            break;
+        case topPlayer:
+
+            if(parseInt(document.getElementById("topamount").innerHTML) <= blind / 2){
+                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("topamount").innerHTML));
+                setPlayerBank({player: name, amount: 0});
+            }else{
+                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind / 2);
+                setPlayerBank({player: name, amount: parseInt(document.getElementById("topamount").innerHTML) - blind / 2});
+            }
+            break;
+        case leftPlayer:
+            if(parseInt(document.getElementById("leftamount").innerHTML) <= blind / 2){
+                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("leftamount").innerHTML));
+                setPlayerBank({player: name, amount: 0});
+            }else{
+                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind / 2);
+                setPlayerBank({player: name, amount: parseInt(document.getElementById("leftamount").innerHTML) - blind / 2});
+            }
+            break;
+        case rightPlayer:
+            if(parseInt(document.getElementById("rightamount").innerHTML) <= blind / 2){
+                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("rightamount").innerHTML));
+                setPlayerBank({player: name, amount: 0});
+            }else{
+                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind / 2);
+                setPlayerBank({player: name, amount: parseInt(document.getElementById("rightamount").innerHTML) - blind / 2});
+            }
+            break;
+    }
+}
+
+function setBetTurn(data){
+    if(data.player == player){
+        setPlayerTurn(data.amount);
+        document.getElementById("turn").innerHTML = "<strong> YOUR TURN! </strong>";
+
+    }else{
+        document.getElementById('turn').innerHTML = "<strong>" + data.player + "'s Turn" + "</strong>";
+        disableButtons();
+    }
+}
+
+function awardWinner(data){
+    var bank = 0;
+    switch(data.player){
+        case topPlayer:
+            bank = parseInt(document.getElementById('topamount').innerHTML);
+            bank += data.amount;
+            document.getElementById('topamount').innerHTML = bank;
+            break;
+        case rightPlayer:
+            bank = parseInt(document.getElementById('rightamount').innerHTML);
+            bank += data.amount;
+            document.getElementById('rightamount').innerHTML = bank;
+            break;
+        case Player:
+            bank = parseInt(document.getElementById('playeramount').innerHTML);
+            bank += data.amount;
+            document.getElementById('playeramount').innerHTML = bank;
+            break;
+        case leftPlayer:
+            bank = parseInt(document.getElementById('leftamount').innerHTML);
+            bank += data.amount;
+            document.getElementById('leftamount').innerHTML = bank;
             break;
     }
 }
@@ -299,17 +384,41 @@ $(function () {
     });
 
     socket.on('setTurn', function(data){
-       if(data.player == player){
-           setPlayerTurn(data.amount);
-           document.getElementById("turn").innerHTML = "<strong> YOUR TURN! </strong>";
-           setPlayerTurn(data.amount);
-
-       }else{
-           document.getElementById('turn').innerHTML = "<strong>" + data.player + "'s Turn" + "</strong>";
-           disableButtons();
-       }
-
+        setBetTurn(data);
     });
 
+    socket.on('flop', function(data){
+        setFlop({onevalue: data.onevalue, twovalue: data.twovalue, threevalue: data.threevalue, onesuit: data.onesuit, twosuit: data.twosuit, threesuit: data.threesuit});
+        setBetTurn({player: data.player});
+    });
 
+    socket.on('turn', function(data){
+        setTurn({value: data.value, suit: data.suit});
+        setBetTurn({player: data.player});
+    });
+
+    socket.on('river', function(data){
+        setRiver({value: data.value, suit: data.suit});
+        setBetTurn({player: data.player});
+    });
+
+    //data is a array of strings containing the names of the players to reveal their cards
+    socket.on('showCards', function(data){
+        for(var player in data){
+            showPlayerCards({leftsuit: player.leftsuit, leftvalue: player.leftvalue, rightsuit: player.rightsuit, rightvalue: rightvalue, player: player.name});
+        }
+    });
+
+    //data is the new blind
+    socket.on('increaseBlinds', function(data){
+       setBlind(data);
+    });
+
+    socket.on('claimBlinds', function(data){
+       claimBigBlinds(data);
+    });
+
+    socket.on('winner', function(data){
+       awardWinner({player: data.player, amount: data.amount});
+    });
 });

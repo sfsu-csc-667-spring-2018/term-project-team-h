@@ -43,11 +43,13 @@ io.on('connection', function(socket){
 		players.push(data);
 		io.emit(data, {playerIndex: players.length - 1, player: players[index], amount: 0});
         io.emit('setTurn', {player: players[index], amount: 0});
+        io.emit('users', players);
 	});
 
 	socket.on('check', function(){
 		io.emit('setTurn', {player: players[0], amount: 0});
 	});
+
 
 });
 
