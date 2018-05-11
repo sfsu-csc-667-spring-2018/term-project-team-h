@@ -1,28 +1,36 @@
-var player = "", leftPlayer = "", rightPlayer = "", topPlayer = "";
-var currentbet = 0, blind = 10, bigBlindPlayer = "", playerIndex = 0;
+let player = "", leftPlayer = "", rightPlayer = "", topPlayer = "";
 let socket;
+let playerIndex = 0;
+let table = 0;
 
 $(document).ready(function(){
     socket = io();
-
+    
+    //Player and Table will given body of get request after user clicks create game/join game
+    table = 1;
     player = Math.random() * 100;
-    socket.emit('new player', player);
-
+    socket.emit('new player', {player: player, table: table});
+    
+    
+    //Player Controls
     document.getElementById("bet").addEventListener("click", function(){
         var amount = document.getElementById("rangevalue").value;
-        socket.emit('bet', {player: player, amount: amount});
+        socket.emit('bet', {player: player, amount: amount, table: table});
+        disableButtons();
     });
 
     document.getElementById("fold").addEventListener("click", function(){
-        socket.emit('fold', {player: player});
+        socket.emit('fold', {player: player, table: table});
         disableButtons();
     });
 
     document.getElementById("check").addEventListener("click", function(){
-        socket.emit('check', player);
+        socket.emit('check', {player: player, table: table});
+        disableButtons();
     });
     document.getElementById("call").addEventListener("click", function(){
-        socket.emit('call', {player: player});
+        socket.emit('call', {player: player, table: table})
+        disableButtons();
 
     });
 
@@ -42,30 +50,49 @@ function addPlayer(data){
     switch(check){
         case 1:
         case -3:
-            if(data.name != leftPlayer) {
                 leftPlayer = data.name;
                 document.getElementById("left-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
-            }
+
             break;
         case 2:
         case -2:
-            if(data.name != topPlayer){
             topPlayer = data.name;
             document.getElementById("top-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
-            }
             break;
         case 3:
         case -1:
-            if(data.name != rightPlayer) {
                 rightPlayer = data.name;
                 document.getElementById("right-name").innerHTML = "<h6><strong>" + data.name + "</strong></h6>";
-            }
             break;
 
     }
 }
 
-function setFlop(cards){
+function removePlayer(data){
+    let check = data.index - playerIndex;
+    switch(check){
+        case 1:
+        case -3:
+            leftPlayer = "";
+            //document.getElementById("left-name").innerHTML = "<h6><strong>" + EMPTY SEAT + "</strong></h6>";
+
+            break;
+        case 2:
+        case -2:
+            topPlayer = "";
+            //document.getElementById("top-name").innerHTML = "<h6><strong>" + EMPTY SEAT + "</strong></h6>";
+            break;
+        case 3:
+        case -1:
+            rightPlayer = "";
+            //document.getElementById("right-name").innerHTML = "<h6><strong>" + EMPTY SEAT + "</strong></h6>";
+            break;
+
+    }
+
+}
+
+function setFlopImagesImages(cards){
     var card1 = "/images/" + cards.onevalue + "_of_" + cards.onesuit + ".png";
     var card2 = "/images/" + cards.twovalue + "_of_" + cards.twosuit + ".png";
     var card3 = "/images/" + cards.threevalue + "_of_" + cards.threesuit + ".png";
@@ -75,12 +102,12 @@ function setFlop(cards){
 }
 
 
-function setTurn(cards){
+function setTurnImages(cards){
     var card = "/images/" + cards.value + "_of_" + cards.suit + ".png";
     document.getElementById("turn").setAttribute('src', card);
 }
 
-function setRiver(cards){
+function setRiverImages(cards){
     var card = "/images/" + cards.value + "_of_" + cards.suit + ".png";
     document.getElementById("river").setAttribute('src', card);
 }
@@ -156,16 +183,18 @@ function setAction(data){
 
 //data fields: player, amount
 function bet(data){
-    setPlayerBank({player: data.player, amount: ( -1 * data.amount ) });
-    setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(data.amount));
     setLastAction(data.player + " Bet " + data.amount);
     setAction({player: data.player, action: "bet", amount: data.amount});
 }
 
 //data fields: player, amount
+function check(data){
+    setLastAction(data.player + " check " + data.amount);
+    setAction({player: data.player, action: "check"});
+}
+
+//data fields: player, amount
 function call(data) {
-    setPlayerBank({player: data.player, amount: (-1 * data.amount)});
-    setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + data.amount);
     setLastAction(data.player + " Called " + data.amount);
     setAction({player: data.player, action: "called", amount: data.amount});
 }
@@ -195,6 +224,8 @@ function fold(data){
     setAction({player: data.player, action: "fold", amount: ""});
 }
 
+
+//Player's Turn
 function setPlayerTurn(currentBet){
     currentbet = currentBet;
     if(currentBet != 0){
@@ -223,202 +254,91 @@ function setPlayerTurn(currentBet){
 
 }
 
-function setBlind(number){
-    blind = number;
-}
-
-function claimBigBlinds(name){
-    switch(name){
-        case player:
-            if(parseInt(document.getElementById("playeramount").innerHTML) <= blind){
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("playeramount").innerHTML));
-                setPlayerBank({player: name, amount: 0});
-            }else{
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind);
-                setPlayerBank({player: name, amount: parseInt(document.getElementById("playeramount").innerHTML) - blind});
-            }
-            claimSmallBlinds(rightPlayer);
-            break;
-        case topPlayer:
-
-            if(parseInt(document.getElementById("topamount").innerHTML) <= blind){
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("topamount").innerHTML));
-                setPlayerBank({player: name, amount: 0});
-            }else{
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind);
-                setPlayerBank({player: name, amount: parseInt(document.getElementById("topamount").innerHTML) - blind});
-            }
-            claimSmallBlinds(leftPlayer);
-            break;
-        case leftPlayer:
-            if(parseInt(document.getElementById("leftamount").innerHTML) <= blind){
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("leftamount").innerHTML));
-                setPlayerBank({player: name, amount: 0});
-            }else{
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind);
-                setPlayerBank({player: name, amount: parseInt(document.getElementById("leftamount").innerHTML) - blind});
-            }
-            claimSmallBlinds(player);
-            break;
-        case rightPlayer:
-            if(parseInt(document.getElementById("rightamount").innerHTML) <= blind){
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("rightamount").innerHTML));
-                setPlayerBank({player: name, amount: 0});
-            }else{
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind);
-                setPlayerBank({player: name, amount: parseInt(document.getElementById("rightamount").innerHTML) - blind});
-            }
-            claimSmallBlinds(topPlayer);
-            break;
-    }
-}
-
-function claimSmallBlinds(name){
-    switch(name){
-        case player:
-            if(parseInt(document.getElementById("playeramount").innerHTML) <= blind / 2){
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("playeramount").innerHTML));
-                setPlayerBank({player: name, amount: 0});
-            }else{
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind / 2);
-                setPlayerBank({player: name, amount: parseInt(document.getElementById("playeramount").innerHTML) - blind / 2});
-            }
-            break;
-        case topPlayer:
-
-            if(parseInt(document.getElementById("topamount").innerHTML) <= blind / 2){
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("topamount").innerHTML));
-                setPlayerBank({player: name, amount: 0});
-            }else{
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind / 2);
-                setPlayerBank({player: name, amount: parseInt(document.getElementById("topamount").innerHTML) - blind / 2});
-            }
-            break;
-        case leftPlayer:
-            if(parseInt(document.getElementById("leftamount").innerHTML) <= blind / 2){
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("leftamount").innerHTML));
-                setPlayerBank({player: name, amount: 0});
-            }else{
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind / 2);
-                setPlayerBank({player: name, amount: parseInt(document.getElementById("leftamount").innerHTML) - blind / 2});
-            }
-            break;
-        case rightPlayer:
-            if(parseInt(document.getElementById("rightamount").innerHTML) <= blind / 2){
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + parseInt(document.getElementById("rightamount").innerHTML));
-                setPlayerBank({player: name, amount: 0});
-            }else{
-                setPotAmount(parseInt(document.getElementById("potamount").innerHTML) + blind / 2);
-                setPlayerBank({player: name, amount: parseInt(document.getElementById("rightamount").innerHTML) - blind / 2});
-            }
-            break;
-    }
-}
-
 function setBetTurn(data){
     if(data.player == player){
         setPlayerTurn(data.amount);
         document.getElementById("turn").innerHTML = "<strong> YOUR TURN! </strong>";
 
     }else{
+        //Doesnt Work
         document.getElementById('turn').innerHTML = "<strong>" + data.player + "'s Turn" + "</strong>";
         disableButtons();
     }
 }
 
-function awardWinner(data){
-    var bank = 0;
-    switch(data.player){
-        case topPlayer:
-            bank = parseInt(document.getElementById('topamount').innerHTML);
-            bank += data.amount;
-            document.getElementById('topamount').innerHTML = bank;
-            break;
-        case rightPlayer:
-            bank = parseInt(document.getElementById('rightamount').innerHTML);
-            bank += data.amount;
-            document.getElementById('rightamount').innerHTML = bank;
-            break;
-        case Player:
-            bank = parseInt(document.getElementById('playeramount').innerHTML);
-            bank += data.amount;
-            document.getElementById('playeramount').innerHTML = bank;
-            break;
-        case leftPlayer:
-            bank = parseInt(document.getElementById('leftamount').innerHTML);
-            bank += data.amount;
-            document.getElementById('leftamount').innerHTML = bank;
-            break;
+
+
+
+
+function users(data){
+    if(data.player == player){
+        playerIndex = data.seat;
+        console.log("my index is = " + playerIndex);
     }
+    for(let i = 0; i < data.table.length; i++){
+        console.log(data.table[i]);
+        addPlayer({name: data.table[i], index: i});
+    }
+
 }
 
 
+
+
+function flop(data){
+    setFlopImagesImages({onevalue: data.onevalue, twovalue: data.twovalue, threevalue: data.threevalue, onesuit: data.onesuit, twosuit: data.twosuit, threesuit: data.threesuit});
+    setBetTurn({player: data.player});
+}
+
+function turn(data){
+    setTurnImages({value: data.value, suit: data.suit});
+    setBetTurn({player: data.player});
+}
+
+function river(data){
+    setRiverImages({value: data.value, suit: data.suit});
+    setBetTurn({player: data.player});
+}
+
+function showCards(data){
+    for(var player in data){
+        showPlayerCards({leftsuit: player.leftsuit, leftvalue: player.leftvalue, rightsuit: player.rightsuit, rightvalue: rightvalue, player: player.name});
+    }
+}
+
+function blinds(data){
+    setPlayerBank({player: data.smallBlind, amount: data.amount / 2});
+    setPlayerBank({player: data.bigBlind, amount: data.amount});
+}
+
+function winner(data){
+    setPlayerBank({player: data.player, amount: (data.amount)});
+}
+
+function deal(data){
+    if(data.player == player){
+        showPlayerCards({player: player, leftcard: data.leftcard, rightcard: data.rightcard});
+    }
+}
+
 //socket.io functions
 $(function () {
-    socket.on('bet', function(data){
-        bet(data);
-    });
-
-    socket.on('fold', function(data){
-        fold(data);
-    });
-
-    socket.on('call', function(data){
-       call(data);
-    });
-
-    socket.on('players', function(data){
-        console.log(data);
-    });
-
-    socket.on('users', function(data){
-        for(let i = 0; i < data.length; i++){
-            addPlayer({name: data[i], index: i});
+    socket.on(table, function(data){
+        switch(data.action){
+            case "fold":fold(data);                 break;
+            case "bet": bet(data);                  break;
+            case "call": call(data);                break;
+            case "new user": users(data);           break;
+            case "disconnect": removePlayer(data);  break;
+            case "check": check(data);              break;
+            case "show cards": showCards(data);     break;
+            case "winner": winner(data);            break;
+            case "river": river(data);              break;
+            case "turn": turn(data);                break;
+            case "flop": flop(data);                break;
+            case "pot amount": setPotAmount(data);  break;
+            case "blinds" : blinds(data);           break;
+            case "deal" : blinds(data);             break;
         }
-
-    });
-
-    socket.on(player, function(data){
-       playerIndex = data.playerIndex;
-       console.log(playerIndex);
-    });
-
-    socket.on('setTurn', function(data){
-        setBetTurn(data);
-    });
-
-    socket.on('flop', function(data){
-        setFlop({onevalue: data.onevalue, twovalue: data.twovalue, threevalue: data.threevalue, onesuit: data.onesuit, twosuit: data.twosuit, threesuit: data.threesuit});
-        setBetTurn({player: data.player});
-    });
-
-    socket.on('turn', function(data){
-        setTurn({value: data.value, suit: data.suit});
-        setBetTurn({player: data.player});
-    });
-
-    socket.on('river', function(data){
-        setRiver({value: data.value, suit: data.suit});
-        setBetTurn({player: data.player});
-    });
-
-    //data is a array of strings containing the names of the players to reveal their cards
-    socket.on('showCards', function(data){
-        for(var player in data){
-            showPlayerCards({leftsuit: player.leftsuit, leftvalue: player.leftvalue, rightsuit: player.rightsuit, rightvalue: rightvalue, player: player.name});
-        }
-    });
-
-    //data is the new blind
-    socket.on('increaseBlinds', function(data){
-       setBlind(data);
-    });
-
-    socket.on('claimBlinds', function(data){
-       claimBigBlinds(data);
-    });
-
-    socket.on('winner', function(data){
-       awardWinner({player: data.player, amount: data.amount});
     });
 });
