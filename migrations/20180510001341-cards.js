@@ -3,16 +3,16 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('cards', {
-      cardId: {
+      card_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         unique: true
       },
-      cardNumber: {
+      card_number: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      cardSuit: {
+      card_suit: {
         type: Sequelize.STRING,
         allowNull: false
       },
