@@ -3,12 +3,12 @@
 module.exports = {
   up: (queryInterface, Sequelize) => {
     return queryInterface.createTable('games', {
-      gameId: {
+      game_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
         autoIncremet: true
       },
-      gamePot: {
+      game_pot: {
         type: Sequelize.INTEGER,
         allowNull: false
       }

@@ -1,5 +1,7 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
+const requireAuthentication = require('../auth/requireAuthentication');
+// const Game = require('../db/games');
 
 /* GET home page. */
 
