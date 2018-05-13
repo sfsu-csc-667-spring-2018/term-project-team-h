@@ -1,15 +1,20 @@
 const socket_io = require('socket.io');
 const cookieParser = require('cookie-parser');
-// const session = require('express-session');
 
 const io = socket_io();
-// const socketAPI = {};
-
-// socketAPI.io = io;
 
 //key: table number value: array of players
 let tables = new Map();
 //
+
+function determineHand(data){
+	let hand = [];
+
+	//sort cards by value
+	for(let card in data){
+
+	}
+}
 
 io.on('connection', function(socket){
 	console.log('A User Connected');
@@ -71,6 +76,7 @@ io.on('connection', function(socket){
 	});
 
 	socket.on('check', function(data){
+		//update player
 		io.emit(data.table, {player: player, action: 'check'});
 	});
 
@@ -82,5 +88,6 @@ io.on('connection', function(socket){
 // socketAPI.sendNotification = function(){
 // 	io.sockets.emit('hello', {msg: 'Hello World!'});
 // }
+
 
 module.exports = io;
