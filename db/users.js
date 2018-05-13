@@ -18,7 +18,7 @@ const serialize = (user, done) => {
 };
 
 const deserialize = (user, done) => {
-	console.log('deserialize', id);
+	// console.log('deserialize', id);
 	db.one('SELECT * FROM users WHERE user_id=${user.user_id}',{user})
 	.then(user => done(null, user))
 	.catch(error => done(error));
