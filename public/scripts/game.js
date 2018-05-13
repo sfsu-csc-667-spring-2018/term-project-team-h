@@ -3,9 +3,14 @@ let socket;
 let playerIndex = 0;
 let table = 0;
 
+
+
 $(document).ready(function(){
+
+    let hand = sortHand([{value: 1, suit: "diamonds"},{value: 1, suit: "diamonds"}, {value: 1, suit: "diamonds"}, {value: 1, suit: "diamonds"}, {value: 3, suit: "diamonds"}, {value: 3, suit:"not diamond"}, {value: 10, suit: "diamonds"}]);
+    console.log(evaluateHand(hand));
+
     socket = io();
-    
     //Player and Table will given body of get request after user clicks create game/join game
     table = 1;
     player = Math.random() * 100;
@@ -14,9 +19,11 @@ $(document).ready(function(){
     
     //Player Controls
     document.getElementById("bet").addEventListener("click", function(){
+
         var amount = document.getElementById("rangevalue").value;
         socket.emit('bet', {player: player, amount: amount, table: table});
         disableButtons();
+
     });
 
     document.getElementById("fold").addEventListener("click", function(){
@@ -43,6 +50,126 @@ $(document).ready(function(){
         }
     });
 });
+
+function findMatches(data){
+    let result = [], stack = [];
+    console.log(stack);
+    for(let i = 0; i < data.length; i++){
+
+        if(stack.length === 0 || stack[0].value === data[i].value){
+            stack.push(data[i]);
+        }else{
+            if(stack.length > 1){
+                result.push(stack);
+            }
+            stack = [data[i]];
+        }
+
+    }
+
+    if(stack.length > 1){
+        result.push(stack);
+    }
+
+
+    return result;
+}
+//1 = high card
+//2 = 1 pair
+//3 = 2 pair
+//4 = 3 of a kind
+//5 = straight
+//6 = flush
+//7 = full house
+//8 = four of a kind
+//9 = straight flush
+function evaluateHand(data){
+    let hand = sortHand(data), result = {type: 0, hand: []};
+    let flushes = getFlushes(hand);
+    let straights = getStraights(hand);
+    let matches = findMatches(hand);
+    if(getStraights(flushes).length > 0){
+        result.type = 9;
+        result.hand = getStraights(flushes);
+    }
+
+
+    return result;
+}
+
+
+function sortHand(data){
+    let hand = [data[0]];
+    let index;
+    for(let i = 1; i < data.length; i++){
+        index = 0;
+        while(index < hand.length && hand[index].value < data[i].value){
+            index++;
+        }
+        hand.splice(index, 0, data[i]);
+    }
+
+    return hand;
+}
+
+function getStraights(data){
+    let result = [], queue = [];
+    for(let i = 0;i < data.length; i++){
+        if(queue.length === 0) {
+            queue.push(data[i]);
+        }else if(data[i].value === data[i-1].value + 1){
+            queue.push(data[i]);
+            if(queue.length === 5){
+                result.push([queue[0], queue[1], queue[2], queue[3], queue[4]]);
+                queue.splice(0, 1);
+            }
+            if(i === data.length - 1 && data[i].value === 13 && data[0].value === 1 && queue.length === 4){
+                queue.push(data[0]);
+                result.push([queue[0], queue[1], queue[2], queue[3], queue[4]]);
+            }
+        }else {
+            queue = [];
+            queue.push(data[i]);
+        }
+
+    }
+
+
+    return result;
+}
+
+function getFlushes(data){
+    let spades = [], clovers = [], hearts = [], diamonds = [];
+    for(let i = 0;i < data.length; i++){
+        switch(data[i].suit){
+            case "spades":
+                spades.push(data[i]);
+                break;
+            case "clovers":
+                clovers.push(data[i]);
+                break;
+            case "hearts":
+                hearts.push(data[i]);
+                break;
+            case "diamonds":
+                diamonds.push(data[i]);
+                break;
+        }
+    }
+
+    if(spades.length >= 5){
+        return spades;
+    }else if(clovers.length >= 5){
+        return clovers;
+    }else if(hearts.length >=5){
+        return hearts;
+    }else if(diamonds.length >= 5){
+        return diamonds;
+    }else{
+        return [];
+    }
+}
+
 
 
 function addPlayer(data){
@@ -93,9 +220,9 @@ function removePlayer(data){
 }
 
 function setFlopImagesImages(cards){
-    var card1 = "/images/" + cards.onevalue + "_of_" + cards.onesuit + ".png";
-    var card2 = "/images/" + cards.twovalue + "_of_" + cards.twosuit + ".png";
-    var card3 = "/images/" + cards.threevalue + "_of_" + cards.threesuit + ".png";
+    let card1 = "/images/" + cards.onevalue + "_of_" + cards.onesuit + ".png";
+    let card2 = "/images/" + cards.twovalue + "_of_" + cards.twosuit + ".png";
+    let card3 = "/images/" + cards.threevalue + "_of_" + cards.threesuit + ".png";
     document.getElementById("flop1").setAttribute('src', card1);
     document.getElementById("flop2").setAttribute('src', card2);
     document.getElementById("flop3").setAttribute('src', card3);
@@ -103,18 +230,18 @@ function setFlopImagesImages(cards){
 
 
 function setTurnImages(cards){
-    var card = "/images/" + cards.value + "_of_" + cards.suit + ".png";
+    let card = "/images/" + cards.value + "_of_" + cards.suit + ".png";
     document.getElementById("turn").setAttribute('src', card);
 }
 
 function setRiverImages(cards){
-    var card = "/images/" + cards.value + "_of_" + cards.suit + ".png";
+    let card = "/images/" + cards.value + "_of_" + cards.suit + ".png";
     document.getElementById("river").setAttribute('src', card);
 }
 
 function showPlayerCards(cards){
-    var leftcard = "/images/" + cards.leftvalue + "_of_" + cards.leftsuit + ".png";
-    var rightcard = "/images/" + cards.rightvalue + "_of_" + cards.rightsuit + ".png";
+    let leftcard = "/images/" + cards.leftvalue + "_of_" + cards.leftsuit + ".png";
+    let rightcard = "/images/" + cards.rightvalue + "_of_" + cards.rightsuit + ".png";
 
     switch(cards.player){
         case player:
@@ -141,22 +268,23 @@ function setPotAmount(text){
 }
 
 function setPlayerBank(data){
+    let playerBank;
     switch(data.player){
 
         case player:
-            var playerBank = parseInt(document.getElementById("playeramount").innerHTML) + data.amount;
+            playerBank = parseInt(document.getElementById("playeramount").innerHTML) + data.amount;
             document.getElementById("playeramount").innerHTML =  playerBank;
             break;
         case leftPlayer:
-            var playerBank = parseInt(document.getElementById("leftamount").innerHTML) + data.amount;
+            playerbank = parseInt(document.getElementById("leftamount").innerHTML) + data.amount;
             document.getElementById("leftamount").innerHTML =  playerBank;
             break;
         case rightPlayer:
-            var playerBank = parseInt(document.getElementById("rightamount").innerHTML) + data.amount;
+            playerbank = parseInt(document.getElementById("rightamount").innerHTML) + data.amount;
             document.getElementById("rightamount").innerHTML =  playerBank;
             break;
         case topPlayer:
-            var playerBank = parseInt(document.getElementById("topamount").innerHTML) + data.amount;
+            playerbank = parseInt(document.getElementById("topamount").innerHTML) + data.amount;
             document.getElementById("topamount").innerHTML =  playerBank;
     }
 }
@@ -301,7 +429,7 @@ function river(data){
 }
 
 function showCards(data){
-    for(var player in data){
+    for(let player in data){
         showPlayerCards({leftsuit: player.leftsuit, leftvalue: player.leftvalue, rightsuit: player.rightsuit, rightvalue: rightvalue, player: player.name});
     }
 }
