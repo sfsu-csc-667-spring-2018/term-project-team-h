@@ -9,6 +9,16 @@ const bodyParser = require('body-parser');
 const passport = require('./auth');
 const session = require('express-session');
 
+app.use(session({
+    secret: 'testsecret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 if(process.env.NODE_ENV === 'development') {
     require("dotenv").config();
 }
@@ -31,14 +41,10 @@ app.set('view engine', 'ejs');
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.io = require('./sockets');
 
-// app.use(session({
-//   secret: 'testsecret',
-//   resave: false,
-//   saveUninitialized: false
-// }));
 
-app.use(passport.initialize());
-// app.use(passport.session());
+
+
+
 
 app.use(logger('dev'));
 app.use(bodyParser.json());
