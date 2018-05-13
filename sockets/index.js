@@ -7,13 +7,18 @@ const io = socket_io();
 let tables = new Map();
 //
 
-function determineHand(data){
-	let hand = [];
+function sortHand(data){
+    let hand = [data[0]];
+    let index = 0;
+    for(let i = 1; i < data.length; i++){
+        index = 0;
+        while(index < hand.length && hand[index].value < data[i].value){
+            i++;
+        }
+        hand.splice(index, 0, data[i]);
+    }
 
-	//sort cards by value
-	for(let card in data){
-
-	}
+    return hand;
 }
 
 io.on('connection', function(socket){
@@ -81,7 +86,10 @@ io.on('connection', function(socket){
 	});
 
 
-
+	socket.on('determine hand', function(data){
+		let hand = sortHand(data.hand);
+        io.emit(data.table, {hand: hand, action: 'determine hand'});
+	});
 
 });
 
