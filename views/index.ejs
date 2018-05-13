@@ -41,40 +41,41 @@
 <div class="container">
     <div class="row">
         <div class="col-md-6">
-
+        <form action="/users/register" method="post">
             <h3>Sign Up</h3>
-            <div class="input-group mb-3">
+            <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Username</span>
                 </div>
-                <input type="text" class="form-control" aria-label="Default"
-                       aria-describedby="inputGroup-sizing-default" id = "sign-up-username">
+                <input type="text" name="name" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
             </div>
 
-            <div class="input-group mb-3">
+            <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">E-Mail</span>
                 </div>
-                <input type="text" class="form-control" aria-label="Default"
-                       aria-describedby="inputGroup-sizing-default" id = "email">
+                <input type="email" name="email" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
             </div>
 
-            <div class="input-group mb-3">
+            <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Password</span>
                 </div>
-                <input type="text" class="form-control" aria-label="Default"
-                       aria-describedby="inputGroup-sizing-default" id = "sign-up-password">
+                <input type="password" name="password" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
             </div>
 
-            <div class="input-group mb-3">
+            <!-- <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Confirm Password</span>
                 </div>
                 <input type="text" class="form-control" aria-label="Default"
-                       aria-describedby="inputGroup-sizing-default" id = "confirm-password">
-            </div>
-            <a class="btn btn-primary" href="#" role="button" id = "signup">Sign Up!</a>
+                       aria-describedby="inputGroup-sizing-default">
+            </div> -->
+            <button class="btn btn-primary" type="submit">Sign Up!</button>
+        </form>
         </div>
 
         <div class="col-md-1">
@@ -87,18 +88,19 @@
 
 
         <div class="col-md-5">
+        
+        <form action="/users/login" method="post">
             <h3>Log In</h3>
 
-
-            <div class="input-group mb-3">
+            <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Username</span>
                 </div>
-                <input type="text" class="form-control" aria-label="Default"
-                       aria-describedby="inputGroup-sizing-default" id = "login-username">
+                <input type="text" name="username" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
             </div>
 
-            <div class="input-group mb-3">
+            <div class="form-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="inputGroup-sizing-default">Password</span>
                 </div>
@@ -107,6 +109,11 @@
             </div>
 
             <a class="btn btn-primary" href="#" role="button" id = "login">Log In!</a>
+                <input type="text" name="password" class="form-control" aria-label="Default"
+                       aria-describedby="inputGroup-sizing-default">
+            </div>
+            <button class="btn btn-primary" type="submit">Log In!</button>
+        </form>
         </div>
     </div>
 

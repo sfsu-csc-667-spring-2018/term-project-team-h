@@ -2,16 +2,16 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('gameCards', {
-      gameId: {
+    return queryInterface.createTable('game_cards', {
+      game_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      userId: {
+      user_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       },
-      cardId: {
+      card_id: {
         type: Sequelize.INTEGER,
         allowNull: false
       }
@@ -26,7 +26,7 @@ module.exports = {
   },
 
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('gameCards');
+    return queryInterface.dropTable('game_cards');
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.

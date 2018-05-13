@@ -6,6 +6,22 @@ const favicon = require('serve-favicon');
 const logger = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const passport = require('./auth');
+const session = require('express-session');
+
+app.use(session({
+    secret: 'testsecret',
+    resave: true,
+    saveUninitialized: true
+}));
+
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+if(process.env.NODE_ENV === 'development') {
+    require("dotenv").config();
+}
 
 const index = require('./routes/index');
 const users = require('./routes/users');
@@ -14,9 +30,6 @@ const lobby = require('./routes/lobby');
 const game = require('./routes/game');
 const db = require('./db/index');
 
-if(process.env.NODE_ENV === 'development') {
-    require("dotenv").config();
-}
 
 console.log('Server running...');
 
@@ -27,6 +40,12 @@ app.set('view engine', 'ejs');
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 app.io = require('./sockets');
+
+
+
+
+
+
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
