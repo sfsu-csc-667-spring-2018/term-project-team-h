@@ -14,13 +14,13 @@ const find = name =>
 
 const serialize = (user, done) => {
 	console.log('serialize', user);
-	done(null, user);
+	done(null, user.user_id);
 };
 
-const deserialize = (user, done) => {
-	// console.log('deserialize', id);
-	db.one('SELECT * FROM users WHERE user_id=${user.user_id}',{user})
-	.then(user => done(null, user))
+const deserialize = (user_id, done) => {
+	console.log('deserialize', user_id);
+	db.one('SELECT * FROM users WHERE user_id=${user_id}',{user_id})
+	.then(({user_id, user_name}) => done(null, {user_id, user_name}))
 	.catch(error => done(error));
 };
 

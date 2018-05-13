@@ -10,8 +10,8 @@ const User = require('../db/users');
 
 router.post('/login',
   passport.authenticate('local', {
-    successRedirect: '/lobby',
-    failureRedirect: '/'
+    successRedirect: '/',
+    failureRedirect: '/failbot'
   })
 );
 
