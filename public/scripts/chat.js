@@ -1,5 +1,6 @@
 $(function () {
 
+
     const socket = io();
 
     $('#chat_messenger').submit(function () {
@@ -11,6 +12,7 @@ $(function () {
     });
 
 
+
     socket.on('chat message', function (O) {
         // console.log('user', myInfo.userName);
         // console.log('MSG',msg);
@@ -18,5 +20,5 @@ $(function () {
 
     });
 
-
+    
 });

@@ -15,7 +15,7 @@ body{
 }
 
 #top-player{
-    margin-top: 5%;
+    margin-top: 1%;
     display:flex;
     flex-direction: row;
     flex: 1.25;
@@ -58,12 +58,12 @@ body{
 #status{
     flex: 1;
 }
+
 #middle{
     display: flex;
-    flex: 3;
+    flex: 1;
     align-items: center;
     flex-direciton: row;
-    min-height: 90%;
     min-width: 100%;
 }
 
@@ -126,6 +126,10 @@ body{
     flex-wrap: nowrap;
     flex-direction: row;
     align-items: center;
+}
+
+#top-player-blind{
+   background-image: URL("http://texaspokersupply.com/wp-content/uploads/big-blind-button.jpg");
 }
 
 #chat{
