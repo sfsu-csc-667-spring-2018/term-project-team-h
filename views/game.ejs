@@ -20,24 +20,6 @@
 <body>
 
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNavAltMarkup"
-            aria-controls="navbarNavAltMarkup" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-
-    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-            <a class="nav-item nav-link active" href="#">Home <span class="sr-only">(current)</span></a>
-            <a class="nav-item nav-link" href="#">Features</a>
-            <a class="nav-item nav-link" href="#">Pricing</a>
-            <a class="nav-item nav-link disabled" href="#">Disabled</a>
-        </div>
-    </div>
-
-
-</nav>
 
 
 <div id="container">
@@ -54,7 +36,11 @@
                 <div id = "bank">
                     <div id = "top-name">
                         <h6><strong>Player 2</strong></h6>
+                        <div id = "top-blind">
+                            BIG BLIND
+                        </div>
                     </div>
+
 
                     <div id = "bank">
                         <strong>Bank:</strong>
@@ -69,6 +55,8 @@
                             Bet $100
                         </div>
                     </div>
+
+
                 </div>
             </div>
 
@@ -87,6 +75,9 @@
                     <div id = "bank">
                         <div id = "left-name">
                             <h6><strong>Player 2</strong></h6>
+                            <div id = "left-blind">
+                                SMALL BLIND
+                            </div>
                         </div>
 
                         <div id = "bank">
@@ -157,6 +148,9 @@
                     <div id = "bank">
                         <div id = "right-name">
                             <h6><strong>Player 2</strong></h6>
+                            <div id = "right-blind" hidden>
+                                BLIND
+                            </div>
                         </div>
 
                         <div id = "bank">
@@ -195,6 +189,10 @@
                     <p id ="playeramount">1000</p>
                 </div>
 
+                <div id = "player-blind">
+                    Dealer
+                </div>
+
 
                 <div id = "buttons">
                     <button id="check" type="button" class="btn btn-warning">Check</button>
@@ -216,16 +214,14 @@
 
     <div id = "chat">
         <ul id="messages"></ul>
-        <form action="">
-            <input id="m" autocomplete="off" /><button>Send</button>
+        <form action="" id = "box-and-button">
+            <input id="m" autocomplete="off" required/>
+            <button id ="send">Send</button>
         </form>
 
-            </div>
-        </div></div>
-
-
-
+    </div>
 </div>
+
 </body>
 
 </html>

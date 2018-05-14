@@ -7,7 +7,6 @@ $(function () {
     var myInfo = {
         userNames: user
     }
-    const userName = myInfo.userNames
 
 
     const socket = io();
@@ -17,12 +16,12 @@ $(function () {
         return false;
     });
 
-    socket.on('chat message', function(msg){
-        // console.log('user', myInfo.userName);
-        // console.log('MSG',msg);
-        $('#messages').append($('<li>').text(userName + ": " + msg));
+    socket.on('chat message', function(data){
+        let messages = $('#messages');
+        messages.append($('<li>').text(data.player + ": " + data.msg));
+        if(messages.children().length > 20){
+            messages[0].removeChild(messages.children()[0]);
+        }
     });
-
-
 
 });

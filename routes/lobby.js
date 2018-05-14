@@ -5,7 +5,7 @@ var router = express.Router();
 router.get('/', function(req, res, next) {
    // res.sendFile(__dirname + '/lobby.ejs');
    // console.log('REQ',req.user.user_name );
-   res.render('lobby', { title: 'Lobby', name: req.user.user_name });
+   res.render('lobby', { title: 'Lobby', name: "yes" });
    // console.log('Dirname', __dirname);
 });
 
