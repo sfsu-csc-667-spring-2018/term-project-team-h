@@ -4,7 +4,6 @@ const cookieParser = require('cookie-parser');
 const io = socket_io();
 
 //key: table number value: array of players
-let tables = new Map();
 //
 
 function sortHand(data){
@@ -67,17 +66,9 @@ io.on('connection', function(socket){
 
 	socket.on('new player', function(data){
 		//TODO: add player to db
-		const t = data.table;
-
-		if(tables.get(t) == undefined){
-			tables.set(t, [data.player]);
-		}else{
-
-            console.log(tables.get(t));
-			tables.set(t, tables.get(t).push(data.player));
-		}
-
-		io.emit(data.table, {player: data.player, action: 'new user', seat: tables.get(data.table).length - 1, table: tables.get(data.table)});
+		//		get other Players in table
+		let allPlayers = [];
+		io.emit(data.table, {player: data.player, action: 'new user', seat: 0, allPlayers: allPlayers});
 	});
 
 	socket.on('check', function(data){

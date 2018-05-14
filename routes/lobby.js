@@ -4,6 +4,7 @@ const Games = require('../db/game');
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
+
     Games.availableGames()
         .then(data => {
            // console.log('DATA', data);

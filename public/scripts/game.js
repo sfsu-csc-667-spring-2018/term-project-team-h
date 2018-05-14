@@ -14,10 +14,11 @@ $(document).ready(function(){
     console.log(evaluateHand(hand1));
     console.log(compareHands([evaluateHand(hand1),  evaluateHand(hand2)]));
 
+
+
     socket = io();
     //Player and Table will given body of get request after user clicks create game/join game
     table = 1;
-    player = Math.random() * 100;
     socket.emit('new player', {player: player, table: table});
     
     
@@ -177,6 +178,7 @@ function disableButtons(){
     document.getElementById("call").disabled = true;
     document.getElementById("fold").disabled = true;
     document.getElementById("bet").disabled = true;
+    document.getElementById("slider").disabled = true;
 }
 function setAction(data){
     switch(data.player){
@@ -244,16 +246,19 @@ function setPlayerTurn(currentBet){
         document.getElementById("call").disabled = false;
         document.getElementById("fold").disabled = false;
         document.getElementById("bet").disabled = false;
+        document.getElementById("slider").disabled = false;
     } else if(currentBet >= parseInt(document.getElementById("playeramount").innerHTML)){
         document.getElementById("check").disabled = true;
         document.getElementById("call").disabled = false;
         document.getElementById("fold").disabled = false;
         document.getElementById("bet").disabled = true;
+        document.getElementById("slider").disabled = true;
     }else{
         document.getElementById("bet").disabled = false;
         document.getElementById("check").disabled = false;
         document.getElementById("call").disabled = true;
         document.getElementById("fold").disabled = false;
+        document.getElementById("slider").disabled = false;
     }
 
     if (document.getElementById("slider").value / 100 * parseInt(document.getElementById("playeramount").innerHTML) < currentbet + 25) {
@@ -278,15 +283,91 @@ function setBetTurn(data){
 }
 
 
+function setDealer(data){
+    switch(data){
+        case player:
+            document.getElementById('player-blind').innerHTML = "Dealer";
+            document.getElementById('right-blind').hidden = false;
+            break;
+        case topPlayer:
+            document.getElementById('top-blind').innerHTML = "Dealer";
+            document.getElementById('top-blind').hidden = false;
+            break;
+        case leftPlayer:
+            document.getElementById('left-blind').innerHTML = "Dealer";
+            document.getElementById('left-blind').hidden = false;
+            break;
+        case rightPlayer:
+            document.getElementById('right-blind').innerHTML = "Dealer";
+            document.getElementById('right-blind').hidden = false;
+            break;
+    }
+}
 
+function setSmallBlind(data){
+    switch(data){
+        case player:
+            document.getElementById('player-blind').innerHTML = "Small Blind";
+            document.getElementById('player-blind').hidden = false;
+            break;
+        case topPlayer:
+            document.getElementById('top-blind').innerHTML = "Small Blind";
+            document.getElementById('top-blind').hidden = false;
+            break;
+        case leftPlayer:
+            document.getElementById('left-blind').innerHTML = "Small Blind";
+            document.getElementById('left-blind').hidden = false;
+            break;
+        case rightPlayer:
+            document.getElementById('right-blind').innerHTML = "Small Blind";
+            document.getElementById('right-blind').hidden = false;
+            break;
+    }
+}
+
+function setBigBlind(data){
+    switch(data){
+        case player:
+            document.getElementById('player-blind').innerText = "Big Blind";
+            document.getElementById('player-blind').hidden = false;
+            break;
+        case topPlayer:
+            document.getElementById('top-blind').innerText = "Big Blind";
+            document.getElementById('top-blind').hidden = false;
+            break;
+        case leftPlayer:
+            document.getElementById('left-blind').innerText = "Big Blind";
+            document.getElementById('left-blind').hidden = false;
+            break;
+        case rightPlayer:
+            document.getElementById('right-blind').innerText = "Big Blind";
+            document.getElementById('right-blind').hidden = false;
+            break;
+    }
+}
+
+function hideBlinds(){
+            document.getElementById('player-blind').hidden =  true;
+            document.getElementById('top-blind').hidden = true ;
+            document.getElementById('left-blind').hidden = true;
+            document.getElementById('right-blind').hidden = true;
+
+}
+
+function setRoles(data){
+    hideBlinds();
+    setDealer(data.dealer);
+    setBigBlind(data.bigBlind);
+    setSmallBlind(data.smallBlind);
+}
 
 
 function users(data){
     if(data.player == player){
         playerIndex = data.seat;
-    }
-    for(let i = 0; i < data.table.length; i++){
-        addPlayer({name: data.table[i], index: i});
+        for(let i = 0; i < data.allPlayers.length; i++){
+            addPlayer({name: data.allPlayers[i], index: i});
+        }
     }
 
 }
