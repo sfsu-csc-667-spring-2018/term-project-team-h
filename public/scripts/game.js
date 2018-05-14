@@ -4,11 +4,15 @@ let playerIndex = 0;
 let table = 0;
 
 
-
 $(document).ready(function(){
 
-    let hand = sortHand([{value: 1, suit: "diamonds"},{value: 1, suit: "diamonds"}, {value: 1, suit: "diamonds"}, {value: 1, suit: "diamonds"}, {value: 3, suit: "diamonds"}, {value: 3, suit:"not diamond"}, {value: 10, suit: "diamonds"}]);
-    console.log(evaluateHand(hand));
+    let hand1 = sortHand([{value: 1, suit: "spades"},{value: 1, suit: "diamonds"}, {value: 3, suit: "spades"}, {value: 4, suit: "clubs"}, {value: 13, suit: "clovers"}, {value: 9, suit:"clubs"}, {value: 11, suit: "diamonds"}]);
+    let hand2 = sortHand([{value: 1, suit: "spades"},{value: 1, suit: "diamonds"}, {value: 3, suit: "spades"}, {value: 4, suit: "clubs"}, {value: 13, suit: "clovers"}, {value: 9, suit:"clubs"}, {value: 11, suit: "diamonds"}]);
+    let hand3 = sortHand([{value: 7, suit: "spades"},{value: 1, suit: "spades"}, {value: 7, suit: "spades"}, {value: 10, suit: "spades"}, {value: 13, suit: "spades"}, {value: 9, suit:"clubs"}, {value: 2, suit: "diamonds"}]);
+    let hand4 = sortHand([{value: 7, suit: "spades"},{value: 1, suit: "diamonds"}, {value: 7, suit: "spades"}, {value: 10, suit: "clubs"}, {value: 13, suit: "clovers"}, {value: 9, suit:"clubs"}, {value: 2, suit: "diamonds"}]);
+
+    console.log(evaluateHand(hand1));
+    console.log(compareHands([evaluateHand(hand1),  evaluateHand(hand2)]));
 
     socket = io();
     //Player and Table will given body of get request after user clicks create game/join game
@@ -20,7 +24,7 @@ $(document).ready(function(){
     //Player Controls
     document.getElementById("bet").addEventListener("click", function(){
 
-        var amount = document.getElementById("rangevalue").value;
+        let amount = document.getElementById("rangevalue").value;
         socket.emit('bet', {player: player, amount: amount, table: table});
         disableButtons();
 
@@ -50,127 +54,6 @@ $(document).ready(function(){
         }
     });
 });
-
-function findMatches(data){
-    let result = [], stack = [];
-    console.log(stack);
-    for(let i = 0; i < data.length; i++){
-
-        if(stack.length === 0 || stack[0].value === data[i].value){
-            stack.push(data[i]);
-        }else{
-            if(stack.length > 1){
-                result.push(stack);
-            }
-            stack = [data[i]];
-        }
-
-    }
-
-    if(stack.length > 1){
-        result.push(stack);
-    }
-
-
-    return result;
-}
-//1 = high card
-//2 = 1 pair
-//3 = 2 pair
-//4 = 3 of a kind
-//5 = straight
-//6 = flush
-//7 = full house
-//8 = four of a kind
-//9 = straight flush
-function evaluateHand(data){
-    let hand = sortHand(data), result = {type: 0, hand: []};
-    let flushes = getFlushes(hand);
-    let straights = getStraights(hand);
-    let matches = findMatches(hand);
-    if(getStraights(flushes).length > 0){
-        result.type = 9;
-        result.hand = getStraights(flushes);
-    }
-
-
-    return result;
-}
-
-
-function sortHand(data){
-    let hand = [data[0]];
-    let index;
-    for(let i = 1; i < data.length; i++){
-        index = 0;
-        while(index < hand.length && hand[index].value < data[i].value){
-            index++;
-        }
-        hand.splice(index, 0, data[i]);
-    }
-
-    return hand;
-}
-
-function getStraights(data){
-    let result = [], queue = [];
-    for(let i = 0;i < data.length; i++){
-        if(queue.length === 0) {
-            queue.push(data[i]);
-        }else if(data[i].value === data[i-1].value + 1){
-            queue.push(data[i]);
-            if(queue.length === 5){
-                result.push([queue[0], queue[1], queue[2], queue[3], queue[4]]);
-                queue.splice(0, 1);
-            }
-            if(i === data.length - 1 && data[i].value === 13 && data[0].value === 1 && queue.length === 4){
-                queue.push(data[0]);
-                result.push([queue[0], queue[1], queue[2], queue[3], queue[4]]);
-            }
-        }else {
-            queue = [];
-            queue.push(data[i]);
-        }
-
-    }
-
-
-    return result;
-}
-
-function getFlushes(data){
-    let spades = [], clovers = [], hearts = [], diamonds = [];
-    for(let i = 0;i < data.length; i++){
-        switch(data[i].suit){
-            case "spades":
-                spades.push(data[i]);
-                break;
-            case "clovers":
-                clovers.push(data[i]);
-                break;
-            case "hearts":
-                hearts.push(data[i]);
-                break;
-            case "diamonds":
-                diamonds.push(data[i]);
-                break;
-        }
-    }
-
-    if(spades.length >= 5){
-        return spades;
-    }else if(clovers.length >= 5){
-        return clovers;
-    }else if(hearts.length >=5){
-        return hearts;
-    }else if(diamonds.length >= 5){
-        return diamonds;
-    }else{
-        return [];
-    }
-}
-
-
 
 function addPlayer(data){
     let check = data.index - playerIndex;
@@ -401,10 +284,8 @@ function setBetTurn(data){
 function users(data){
     if(data.player == player){
         playerIndex = data.seat;
-        console.log("my index is = " + playerIndex);
     }
     for(let i = 0; i < data.table.length; i++){
-        console.log(data.table[i]);
         addPlayer({name: data.table[i], index: i});
     }
 
