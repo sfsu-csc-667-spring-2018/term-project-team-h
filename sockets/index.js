@@ -11,11 +11,12 @@ let stillIn = [];
 let bet = 0;
 let currentPlayer = "";
 let pot = 0;
-let blindAmount = 20, bigBlind = "";
+let blindAmount = 20, bigBlind = "", smallBlind = "", dealer = "";
 
 
 io.on('connection', function(socket){
 	console.log('A User Connected');
+
 	socket.on('chat message', function(msg){
 		console.log('message: ' + msg);
 		io.emit('chat message', msg)
