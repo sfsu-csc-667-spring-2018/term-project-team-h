@@ -283,7 +283,6 @@ function setBetTurn(data){
         document.getElementById("turn").innerHTML = "<strong> YOUR TURN! </strong>";
 
     }else{
-        //Doesnt Work
         document.getElementById('turn').innerHTML = "<strong>" + data.player + "'s Turn" + "</strong>";
         disableButtons();
     }
@@ -437,7 +436,8 @@ $(function () {
             case "flop": flop(data);                break;
             case "pot amount": setPotAmount(data);  break;
             case "blinds" : blinds(data);           break;
-            case "deal" : deal(data);             break;
+            case "deal" : deal(data);               break;
+            case "setTurn": setBetTurn(data);       break;
         }
     });
 });
