@@ -20,6 +20,20 @@ function compareHands(data){
     return winner;
 };
 
+function sortHand(data){
+    let hand = [data[0]];
+    let index = 0;
+    for(let i = 1; i < data.length; i++){
+        index = 0;
+        while(index < hand.length && hand[index].value < data[i].value){
+            i++;
+        }
+        hand.splice(index, 0, data[i]);
+    }
+
+    return hand;
+}
+
 function findMatches(data){
     let result = [], stack = [];
     for(let i = 0; i < data.length; i++){

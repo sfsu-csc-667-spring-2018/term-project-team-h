@@ -1,6 +1,8 @@
 let player = "", leftPlayer = "", rightPlayer = "", topPlayer = "";
 let socket;
 let playerIndex = 0;
+
+//DB VALUES
 let table = 0;
 
 
@@ -14,7 +16,7 @@ $(document).ready(function(){
     console.log(evaluateHand(hand1));
     console.log(compareHands([evaluateHand(hand1),  evaluateHand(hand2)]));
 
-
+    player = Math.random()*100;
 
     socket = io();
     //Player and Table will given body of get request after user clicks create game/join game
@@ -124,6 +126,7 @@ function setRiverImages(cards){
 }
 
 function showPlayerCards(cards){
+    console.log(cards);
     let leftcard = "/images/" + cards.leftvalue + "_of_" + cards.leftsuit + ".png";
     let rightcard = "/images/" + cards.rightvalue + "_of_" + cards.rightsuit + ".png";
 
@@ -131,15 +134,19 @@ function showPlayerCards(cards){
         case player:
             document.getElementById("player-left-card").setAttribute('src', leftcard);
             document.getElementById("player-right-card").setAttribute('src', rightcard);
+            break;
         case topPlayer:
             document.getElementById("opponents-top-cards").children[0].setAttribute('src', leftcard);
             document.getElementById("opponents-top-cards").children[1].setAttribute('src', rightcard);
+            break;
         case leftPlayer:
             document.getElementById("opponents-left-cards").children[0].setAttribute('src', leftcard);
             document.getElementById("opponents-left-cards").children[1].setAttribute('src', rightcard);
+            break;
         case rightPlayer:
             document.getElementById("opponents-right-cards").children[0].setAttribute('src', leftcard);
             document.getElementById("opponents-right-cards").children[1].setAttribute('src', rightcard);
+            break;
     }
 }
 
@@ -363,11 +370,13 @@ function setRoles(data){
 
 
 function users(data){
+    console.log(data);
     if(data.player == player){
         playerIndex = data.seat;
-        for(let i = 0; i < data.allPlayers.length; i++){
-            addPlayer({name: data.allPlayers[i], index: i});
-        }
+    }
+    for(let i = 0; i < data.allPlayers.length; i++){
+        console.log(data.allPlayers[i] + " " + data.seat);
+        addPlayer({name: data.allPlayers[i], index: i});
     }
 
 }
@@ -407,7 +416,7 @@ function winner(data){
 
 function deal(data){
     if(data.player == player){
-        showPlayerCards({player: player, leftcard: data.leftcard, rightcard: data.rightcard});
+        showPlayerCards({player: player, leftvalue: data.leftvalue, rightvalue: data.rightvalue, leftsuit: data.leftsuit, rightsuit: data.rightsuit});
     }
 }
 
@@ -428,7 +437,7 @@ $(function () {
             case "flop": flop(data);                break;
             case "pot amount": setPotAmount(data);  break;
             case "blinds" : blinds(data);           break;
-            case "deal" : blinds(data);             break;
+            case "deal" : deal(data);             break;
         }
     });
 });
