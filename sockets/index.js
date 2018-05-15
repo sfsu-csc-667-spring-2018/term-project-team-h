@@ -4,25 +4,18 @@ const cookieParser = require('cookie-parser');
 const io = socket_io();
 
 //key: table number value: array of players
-//
+//DB VALUES
+let num = 0;
+let players = [];
+let stillIn = [];
+let bet = 0;
+let currentPlayer = "";
+let pot = 0;
+let blindAmount = 20, bigBlind = "";
 
-function sortHand(data){
-    let hand = [data[0]];
-    let index = 0;
-    for(let i = 1; i < data.length; i++){
-        index = 0;
-        while(index < hand.length && hand[index].value < data[i].value){
-            i++;
-        }
-        hand.splice(index, 0, data[i]);
-    }
-
-    return hand;
-}
 
 io.on('connection', function(socket){
 	console.log('A User Connected');
-
 	socket.on('chat message', function(msg){
 		console.log('message: ' + msg);
 		io.emit('chat message', msg)
@@ -67,8 +60,10 @@ io.on('connection', function(socket){
 	socket.on('new player', function(data){
 		//TODO: add player to db
 		//		get other Players in table
-		let allPlayers = [];
-		io.emit(data.table, {player: data.player, action: 'new user', seat: 0, allPlayers: allPlayers});
+		players.push(data.player);
+		let value = parseInt(Math.random()*13) + 1;
+		io.emit(data.table, {player: data.player, action: 'new user', seat: num++, allPlayers: players});
+		io.emit(data.table, {player: data.player, action: 'deal', leftvalue: value, leftsuit: "spades", rightvalue: value, rightsuit: "diamonds"});
 	});
 
 	socket.on('check', function(data){
@@ -77,10 +72,6 @@ io.on('connection', function(socket){
 	});
 
 
-	socket.on('determine hand', function(data){
-		let hand = sortHand(data.hand);
-        io.emit(data.table, {hand: hand, action: 'determine hand'});
-	});
 
 });
 
