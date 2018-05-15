@@ -23,5 +23,4 @@ $(function () {
             messages[0].removeChild(messages.children()[0]);
         }
     });
-
 });

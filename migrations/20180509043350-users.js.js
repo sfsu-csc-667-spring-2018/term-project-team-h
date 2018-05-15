@@ -24,6 +24,7 @@ module.exports = {
       },
       user_money: {
         type: Sequelize.INTEGER,
+
       }
     });
   },
