@@ -13,6 +13,7 @@ $(function () {
 
 
 
+
     socket.on('chat message', function (O) {
         // console.log('user', myInfo.userName);
         // console.log('MSG',msg);
