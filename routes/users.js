@@ -11,7 +11,7 @@ const User = require('../db/users');
 router.post('/login',
     passport.authenticate('local', {
         successRedirect: '/lobby',
-        failureRedirect: '/failbot'
+        failureRedirect: '/error'
     })
 );
 
@@ -34,7 +34,7 @@ router.post('/register', (request, response, next) => {
         })
         .catch(error => {
             console.log(error);
-            response.redirect('/failbot');
+            response.redirect('/error');
         });
 });
 
