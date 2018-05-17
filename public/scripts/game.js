@@ -1,4 +1,4 @@
-let player = "", leftPlayer = "", rightPlayer = "", topPlayer = "";
+let player = "", leftPlayer = "yes", rightPlayer = "", topPlayer = "";
 let socket;
 let playerIndex = 0;
 
@@ -7,6 +7,13 @@ let table = 0;
 
 
 $(document).ready(function(){
+    disableButtons();
+
+    let test = [1, 2, 3];
+
+
+
+
 
     let hand1 = sortHand([{value: 1, suit: "spades"},{value: 1, suit: "diamonds"}, {value: 3, suit: "spades"}, {value: 4, suit: "clubs"}, {value: 13, suit: "clovers"}, {value: 9, suit:"clubs"}, {value: 11, suit: "diamonds"}]);
     let hand2 = sortHand([{value: 1, suit: "spades"},{value: 1, suit: "diamonds"}, {value: 3, suit: "spades"}, {value: 4, suit: "clubs"}, {value: 13, suit: "clovers"}, {value: 9, suit:"clubs"}, {value: 11, suit: "diamonds"}]);
@@ -16,7 +23,9 @@ $(document).ready(function(){
     console.log(evaluateHand(hand1));
     console.log(compareHands([evaluateHand(hand1),  evaluateHand(hand2)]));
 
-    player = Math.random()*100;
+    player = Math.random() * 100;
+    hidePlayerCards(leftPlayer);
+    showBackOfCards(leftPlayer);
 
     socket = io();
     //Player and Table will given body of get request after user clicks create game/join game
@@ -150,6 +159,28 @@ function showPlayerCards(cards){
     }
 }
 
+function hidePlayerCards(person){
+
+    switch(person){
+        case player:
+            document.getElementById("player-left-card").setAttribute('hidden', "true");
+            document.getElementById("player-right-card").setAttribute('hidden', "true");
+            break;
+        case topPlayer:
+            document.getElementById("opponents-top-cards").children[0].setAttribute('hidden', "true");
+            document.getElementById("opponents-top-cards").children[1].setAttribute('hidden', "true");
+            break;
+        case leftPlayer:
+            document.getElementById("opponents-left-cards").children[0].setAttribute('hidden', "true");
+            document.getElementById("opponents-left-cards").children[1].setAttribute('hidden', "true");
+            break;
+        case rightPlayer:
+            document.getElementById("opponents-right-cards").children[0].setAttribute('hidden', "true");
+            document.getElementById("opponents-right-cards").children[1].setAttribute('hidden', "true");
+            break;
+    }
+}
+
 function setLastAction(text){
     document.getElementById("lastaction").innerHTML = text;
 }
@@ -205,7 +236,9 @@ function setAction(data){
 function bet(data){
     setLastAction(data.player + " Bet " + data.amount);
     setAction({player: data.player, action: "bet", amount: data.amount});
+    setPotAmount(data.potAmount);
 }
+
 
 //data fields: player, amount
 function check(data){
@@ -217,6 +250,7 @@ function check(data){
 function call(data) {
     setLastAction(data.player + " Called " + data.amount);
     setAction({player: data.player, action: "called", amount: data.amount});
+    setPotAmount(data.potAmount);
 }
 
 //data fields: player
@@ -353,11 +387,10 @@ function setBigBlind(data){
 }
 
 function hideBlinds(){
-            document.getElementById('player-blind').hidden =  true;
-            document.getElementById('top-blind').hidden = true ;
-            document.getElementById('left-blind').hidden = true;
-            document.getElementById('right-blind').hidden = true;
-
+    document.getElementById('player-blind').hidden =  true;
+    document.getElementById('top-blind').hidden = true ;
+    document.getElementById('left-blind').hidden = true;
+    document.getElementById('right-blind').hidden = true;
 }
 
 function setRoles(data){
@@ -374,10 +407,28 @@ function users(data){
         playerIndex = data.seat;
     }
     for(let i = 0; i < data.allPlayers.length; i++){
-        console.log(data.allPlayers[i] + " " + data.seat);
         addPlayer({name: data.allPlayers[i], index: i});
     }
 
+}
+
+function showBackOfCards(player){
+    let card = "https://pre00.deviantart.net/cb44/th/pre/i/2016/259/5/a/pokemon_card_backside_in_high_resolution_by_atomicmonkeytcg-dah43cy.png";
+
+    switch(player){
+        case topPlayer:
+            document.getElementById("opponents-top-cards").children[0].setAttribute('src', card);
+            document.getElementById("opponents-top-cards").children[1].setAttribute('src', card);
+            break;
+        case leftPlayer:
+            document.getElementById("opponents-left-cards").children[0].setAttribute('src', card);
+            document.getElementById("opponents-left-cards").children[1].setAttribute('src', card);
+            break;
+        case rightPlayer:
+            document.getElementById("opponents-right-cards").children[0].setAttribute('src', card);
+            document.getElementById("opponents-right-cards").children[1].setAttribute('src', card);
+            break;
+    }
 }
 
 
@@ -416,6 +467,15 @@ function winner(data){
 function deal(data){
     if(data.player == player){
         showPlayerCards({player: player, leftvalue: data.leftvalue, rightvalue: data.rightvalue, leftsuit: data.leftsuit, rightsuit: data.rightsuit});
+    }else{
+        switch(data.player){
+            case topPlayer:
+                break;
+            case rightPlayer:
+                break;
+            case leftPlayer:
+                break;
+        }
     }
 }
 
@@ -423,7 +483,7 @@ function deal(data){
 $(function () {
     socket.on(table, function(data){
         switch(data.action){
-            case "fold":fold(data);                 break;
+            case "fold": fold(data);                break;
             case "bet": bet(data);                  break;
             case "call": call(data);                break;
             case "new user": users(data);           break;
