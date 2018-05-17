@@ -13,7 +13,6 @@ let currentPlayer = "";
 let pot = 0;
 let blindAmount = 20, bigBlind = "", smallBlind = "", dealer = "";
 
-
 io.on('connection', function(socket){
 	console.log('A User Connected');
 
@@ -34,8 +33,8 @@ io.on('connection', function(socket){
 		//TODO: update pot
 		//		update nextPlayer
 		//		send card if necessary
-		let nextPlayer;
-		io.emit(data.table, {action: "bet", amount: data.amount, player: data.player, nextPlayer: nextPlayer});
+		let nextPlayer, potAmount;
+		io.emit(data.table, {action: "bet", amount: data.amount, player: data.player, nextPlayer: nextPlayer, potAmount: potAmount});
 	});
 
 	socket.on('fold', function (data){
@@ -54,8 +53,8 @@ io.on('connection', function(socket){
 		* 		update player's bank
 		* 		check if a card needs to be sent
 		* */
-		let nextPlayer;
-        io.emit(data.table, {action: "call", player: data.player, amount: data.amount, nextPlayer: nextPlayer});
+		let nextPlayer, potAmount;
+        io.emit(data.table, {action: "call", player: data.player, amount: data.amount, nextPlayer: nextPlayer, potAmount: potAmount});
 	});
 
 	socket.on('new player', function(data){
@@ -76,9 +75,113 @@ io.on('connection', function(socket){
 
 });
 
-// socketAPI.sendNotification = function(){
-// 	io.sockets.emit('hello', {msg: 'Hello World!'});
-// }
+
+
+
+
+function getCards(data) {
+    let done = false, card, dealtCards = data.dealtCards, count = 0, result = [];
+    while (!done) {
+        card = parseInt(Math.random() * 52) + 1;
+        if (!(dealtCards.includes(card))) {
+            dealtCards.push(card);
+            result.push(card);
+            //TODO: update dealt cards in db
+            count++;
+        }
+        if (count === data.numberOfCards) {
+            done = true;
+        }
+
+        return result;
+    }
+}
+
+function convertSuit(data){
+    let result;
+    switch(data){
+        case 1:
+            result = "Spades";
+            break;
+        case 2:
+            result = "Clubs";
+            break;
+        case 3:
+            result = "Diamonds";
+            break;
+        case 0:
+            result = "Hearts";
+            break;
+    }
+    return result;
+}
+
+function setFlop(data) {
+    const cards = getCards({numberOfCards: 3, dealtCards: data.dealtCards});
+    let flop = {
+        onevalue: cards[0] % 13 + 1,
+        twovalue: cards[1] % 13 + 1,
+        threevalue: cards[2] % 13 + 1,
+        onesuit: convertSuit(parseInt((cards[0] - 1) / 13)),
+        twosuit: convertSuit(parseInt((cards[1] - 1) / 13)),
+        threesuit: convertSuit(parseInt((cards[2] - 1) / 13)),
+        player: data.player,
+        action: "flop"
+    };
+    //TODO: update community and dealt cards in db
+    io.emit(data.table, flop);
+}
+
+function setTurn(data) {
+    const cards = getCards({numberOfCards: 1, dealtCards: data.dealtCards});
+    let flop = {
+        value: cards[0] % 13 + 1,
+        suit: convertSuit(parseInt((cards[0] - 1) / 13)),
+        player: data.player,
+        action: "turn"
+    };
+    //TODO: update community and dealt cards in db
+    io.emit(data.table, flop);
+}
+
+function setRiver(data) {
+    const cards = getCards({numberOfCards: 1, dealtCards: data.dealtCards});
+    let flop = {
+        value: cards[0] % 13 + 1,
+        suit: convertSuit(parseInt((cards[0] - 1) / 13)),
+        player: data.player,
+        action: "river"
+    };
+    //TODO: update community and dealt cards in db
+    io.emit(data.table, flop);
+}
+
+function dealCards(data){
+    let cards;
+    for(let i = 0; i < data.players.length; i++){
+        cards = getCards({numberOfCards: 2, dealtCards: data.dealtCards});
+        cards  = {
+            leftvalue: cards[0] % 13 + 1,
+            rightvalue: cards[1] % 13 + 1,
+            leftsuit: convertSuit(parseInt((cards[0] - 1) / 13)),
+            rightsuit: convertSuit(parseInt((cards[1] - 1) / 13)),
+            action: "deal",
+            player: data.player[i]
+        };
+        //TODO: update player cards and dealt cards in db
+        io.emit(data.table, cards);
+    }
+}
+
+function updateGame(data){
+    //TODO: get status of game
+
+    switch(status){
+
+    }
+}
+
+
 
 
 module.exports = io;
