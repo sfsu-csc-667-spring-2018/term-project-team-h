@@ -470,10 +470,13 @@ function deal(data){
     }else{
         switch(data.player){
             case topPlayer:
+                showBackOfCards(topPlayer);
                 break;
             case rightPlayer:
+                showBackOfCards(rightPlayer);
                 break;
             case leftPlayer:
+                showBackOfCards(leftPlayer);
                 break;
         }
     }

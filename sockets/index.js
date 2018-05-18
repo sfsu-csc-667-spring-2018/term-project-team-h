@@ -4,14 +4,6 @@ const cookieParser = require('cookie-parser');
 const io = socket_io();
 
 //key: table number value: array of players
-//DB VALUES
-let num = 0;
-let players = [];
-let stillIn = [];
-let bet = 0;
-let currentPlayer = "";
-let pot = 0;
-let blindAmount = 20, bigBlind = "", smallBlind = "", dealer = "";
 
 io.on('connection', function(socket){
 	console.log('A User Connected');
@@ -53,7 +45,7 @@ io.on('connection', function(socket){
 		* 		update player's bank
 		* 		check if a card needs to be sent
 		* */
-		let nextPlayer, potAmount;
+		let nextPlayer;
         io.emit(data.table, {action: "call", player: data.player, amount: data.amount, nextPlayer: nextPlayer, potAmount: potAmount});
 	});
 
@@ -81,37 +73,29 @@ io.on('connection', function(socket){
 
 function getCards(data) {
     let done = false, card, dealtCards = data.dealtCards, count = 0, result = [];
-    while (!done) {
+    while(!done) {
         card = parseInt(Math.random() * 52) + 1;
         if (!(dealtCards.includes(card))) {
             dealtCards.push(card);
             result.push(card);
-            //TODO: update dealt cards in db
             count++;
         }
         if (count === data.numberOfCards) {
             done = true;
         }
 
-        return result;
+        //TODO: update dealt cards in db
     }
+    return result;
 }
 
 function convertSuit(data){
     let result;
     switch(data){
-        case 1:
-            result = "Spades";
-            break;
-        case 2:
-            result = "Clubs";
-            break;
-        case 3:
-            result = "Diamonds";
-            break;
-        case 0:
-            result = "Hearts";
-            break;
+        case 1: result = "Spades";break;
+        case 2: result = "Clubs";break;
+        case 3: result = "Diamonds";break;
+        case 0: result = "Hearts";break;
     }
     return result;
 }
@@ -134,26 +118,26 @@ function setFlop(data) {
 
 function setTurn(data) {
     const cards = getCards({numberOfCards: 1, dealtCards: data.dealtCards});
-    let flop = {
+    let turn = {
         value: cards[0] % 13 + 1,
         suit: convertSuit(parseInt((cards[0] - 1) / 13)),
         player: data.player,
         action: "turn"
     };
     //TODO: update community and dealt cards in db
-    io.emit(data.table, flop);
+    io.emit(data.table, turn);
 }
 
 function setRiver(data) {
     const cards = getCards({numberOfCards: 1, dealtCards: data.dealtCards});
-    let flop = {
+    let river = {
         value: cards[0] % 13 + 1,
         suit: convertSuit(parseInt((cards[0] - 1) / 13)),
         player: data.player,
         action: "river"
     };
     //TODO: update community and dealt cards in db
-    io.emit(data.table, flop);
+    io.emit(data.table, river);
 }
 
 function dealCards(data){
@@ -172,16 +156,4 @@ function dealCards(data){
         io.emit(data.table, cards);
     }
 }
-
-function updateGame(data){
-    //TODO: get status of game
-
-    switch(status){
-
-    }
-}
-
-
-
-
 module.exports = io;
