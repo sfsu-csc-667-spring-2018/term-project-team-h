@@ -10,9 +10,49 @@
 <body>
     <p id="userID" hidden><%= name %></p>
     <ul id="messages"></ul>
-    <form action="">
+    <form action="POST" id="chat_messenger">
         <input id="m" autocomplete="off"/>
     <button>Send</button>
+    </form>
+
+
+    <!----------CREATING A NEW ROOM---------------------->
+    <form action="/game/create" method="POST">
+        <h3>Create Room</h3>
+        <div class="form-group">
+            <div class="input-group-prepend">
+                <span class="input-group-text" id="inputGroup-sizing-default">Room Name</span>
+            </div>
+            <input type="text" name="room_name" class="form-control" aria-label="Default"
+                   aria-describedby="inputGroup-sizing-default">
+        </div>
+        <button class="btn btn-primary" type="submit">Create!</button>
+    </form>
+
+    <!---------JOINING THE GAME------------------------->
+    <form action="/game/join" method = 'POST'>
+        <div class="form-group">
+        <table>
+            <tr>
+                <th>Room ID</th>
+                <th>Room Name</th>
+            </tr>
+
+            <% if(availabaleGame.length) { %>
+            <% for(var i = 0; i < availabaleGame.length;i++) { %>
+            <tr>
+                <td><%= availabaleGame[i].game_id %></td>
+                <td><%= availabaleGame[i].room_name %></td>
+                <td><button class="btn btn-primary" type="submit" name="room_id" value="<%= availabaleGame[i].game_id %>">Join</button></td>
+            </tr>
+
+        <% } } else { %>
+        <tr>
+            <td colspan="6"> There are No Open Rooms</td>
+        </tr>
+        </table>
+    <% } %>
+        </div>
     </form>
 </body>
 </html>
