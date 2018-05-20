@@ -8,7 +8,6 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const passport = require('./auth');
 const session = require('express-session');
-const flash = require('connect-flash');
 
 app.use(session({
     secret: 'testsecret',
@@ -19,7 +18,6 @@ app.use(session({
 
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(flash());
 
 if(process.env.NODE_ENV === 'development') {
     require("dotenv").config();
@@ -60,7 +58,6 @@ app.use('/users', users);
 app.use('/test', test);
 app.use('/lobby', lobby);
 app.use('/game', game);
-app.use('/game/:id', game);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

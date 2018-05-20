@@ -2,57 +2,36 @@
 <html>
 <head>
     <title>Lobby</title>
-</head>
-<link rel='stylesheet' href='/stylesheets/chat.css'/>
-<script src="/socket.io/socket.io.js"></script>
-<script src="https://code.jquery.com/jquery-1.11.1.js"></script>
-<script type="text/javascript" src="scripts/chat.js"></script>
-<body>
-    <p id="userID" hidden><%= name %></p>
-    <ul id="messages"></ul>
-    <form action="POST" id="chat_messenger">
-        <input id="m" autocomplete="off"/>
-    <button>Send</button>
-    </form>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-1.11.1.js"></script>
+    <script type="text/javascript" src="scripts/chat.js"></script>
+    <script type="text/javascript" src="scripts/lobby.js"></script>
+    <link rel='stylesheet' href='/stylesheets/chat.css'/>
+    <link rel='stylesheet' href='/stylesheets/lobby.css'/>
+    <script src="/socket.io/socket.io.js"></script>
+  </head>
+  <body>
+  <p id="userID" hidden><%=name%></p>
+  <div id = "container">
+    <div id = "left">
+      <h1>Lobby!</h1>
+      <div id = "games">
+        <button id = "join">Join Game</button>
+        <button id = "create">Create Game</button>
+      </div>
+    </div>
 
+    <div id = "chat">
+      <ul id="messages"></ul>
+      <form id = "box-and-button">
+        <input id="m" autocomplete="off" required/>
+        <button id ="send">Send</button>
+      </form>
+    </div>
 
-    <!----------CREATING A NEW ROOM---------------------->
-    <form action="/game/create" method="POST">
-        <h3>Create Room</h3>
-        <div class="form-group">
-            <div class="input-group-prepend">
-                <span class="input-group-text" id="inputGroup-sizing-default">Room Name</span>
-            </div>
-            <input type="text" name="room_name" class="form-control" aria-label="Default"
-                   aria-describedby="inputGroup-sizing-default">
-        </div>
-        <button class="btn btn-primary" type="submit">Create!</button>
-    </form>
+  </div>
 
-    <!---------JOINING THE GAME------------------------->
-    <form action="/game/join" method = 'POST'>
-        <div class="form-group">
-        <table>
-            <tr>
-                <th>Room ID</th>
-                <th>Room Name</th>
-            </tr>
-
-            <% if(availabaleGame.length) { %>
-            <% for(var i = 0; i < availabaleGame.length;i++) { %>
-            <tr>
-                <td><%= availabaleGame[i].game_id %></td>
-                <td><%= availabaleGame[i].room_name %></td>
-                <td><button class="btn btn-primary" type="submit" name="room_id" value="<%= availabaleGame[i].game_id %>">Join</button></td>
-            </tr>
-
-        <% } } else { %>
-        <tr>
-            <td colspan="6"> There are No Open Rooms</td>
-        </tr>
-        </table>
-    <% } %>
-        </div>
-    </form>
-</body>
+    </div>
+  </body>
 </html>

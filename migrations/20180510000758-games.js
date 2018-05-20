@@ -6,20 +6,11 @@ module.exports = {
       game_id: {
         type: Sequelize.INTEGER,
         primaryKey: true,
-        autoIncrement: true
+        autoIncremet: true
       },
-      room_name: {
-        type: Sequelize.STRING,
+      game_pot: {
+        type: Sequelize.INTEGER,
         allowNull: false
-      },
-      status: {
-        type: Sequelize.STRING
-      },
-      current_turn: {
-        type: Sequelize.INTEGER
-      },
-      last_hand: {
-        type: Sequelize.INTEGER
       }
     });
     /*

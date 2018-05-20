@@ -1,19 +1,26 @@
 $(function () {
 
+    //used to build object for later use
+    // var myInfo = {
+    //     userNames: user
+    // }
+
     const socket = io();
-    $('#chat_messenger').submit(function () {
+
+
+    $('form').submit(function(){
+        //Getting Hidden values of the player
         var user = $('#userID').text();
-        console.log('USer', user);
-        socket.emit('chat message', {message: $('#m').val(), user: user});
+        socket.emit('chat message', {msg: $('#m').val(), user: user});
         $('#m').val('');
         return false;
     });
 
-    socket.on('chat message', function (O) {
-        // console.log('user', myInfo.userName);
-        // console.log('MSG',msg);
-        $('#messages').append($('<li>').text(O.user + ": " + O.message));
+    socket.on('chat message', function(data){
+        let messages = $('#messages');
+        messages.append($('<li>').text(data.user + ": " + data.msg));
+        if(messages.children().length > 20){
+            messages[0].removeChild(messages.children()[0]);
+        }
     });
-
-
 });

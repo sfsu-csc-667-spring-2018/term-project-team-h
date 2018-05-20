@@ -15,7 +15,7 @@ body{
 }
 
 #top-player{
-    margin-top: 5%;
+    margin-top: 1%;
     display:flex;
     flex-direction: row;
     flex: 1.25;
@@ -58,12 +58,12 @@ body{
 #status{
     flex: 1;
 }
+
 #middle{
     display: flex;
-    flex: 3;
+    flex: 1;
     align-items: center;
     flex-direciton: row;
-    min-height: 90%;
     min-width: 100%;
 }
 
@@ -128,6 +128,10 @@ body{
     align-items: center;
 }
 
+#top-player-blind{
+   background-image: URL("http://texaspokersupply.com/wp-content/uploads/big-blind-button.jpg");
+}
+
 #chat{
     display:flex;
 }
@@ -153,7 +157,7 @@ body{
 
 #opponent-right-bank-roll{
     display: flex;
-    flex: 1
+    flex: 1;
     flex-direction: column;
     min-height: 100%;
 }
@@ -195,6 +199,11 @@ body{
 #pot{
     flex: 1;
     text-align:center;
+}
+
+#blinds{
+    flex: 1;
+    text-align: center;
 }
 
 #current-bet{
