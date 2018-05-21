@@ -12,6 +12,8 @@ const users = require('./routes/users');
 const test = require('./routes/test');
 const lobby = require('./routes/lobby');
 const game = require('./routes/game');
+const login = require('./routes/login');
+const register = require('./routes/register');
 const db = require('./db/dbInit');
 
 if(process.env.NODE_ENV === 'development') {
@@ -35,6 +37,8 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // app.use('/', index);
 app.use('/', index);
+app.use('/login', login);
+app.use('/register', register);
 app.use('/users', users);
 app.use('/test', test);
 app.use('/lobby', lobby);
