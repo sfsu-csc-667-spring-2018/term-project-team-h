@@ -2,21 +2,32 @@
 
 module.exports = {
   up: (queryInterface, Sequelize) => {
-    return queryInterface.createTable('game_cards', {
-      game_id: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
+    return queryInterface.createTable('users', {
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false,
-        defaultValue: 0
+        primaryKey: true,
+        autoIncrement: true
       },
-      card_id: {
-        type: Sequelize.INTEGER,
+      user_name: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
+      user_email: {
+        type: Sequelize.STRING,
+        allowNull: false,
+        unique: true
+      },
+      user_password: {
+        type: Sequelize.STRING,
         allowNull: false
+      },
+      user_money: {
+        type: Sequelize.INTEGER,
+
       }
     });
+  },
     /*
       Add altering commands here.
       Return a promise to correctly handle asynchronicity.
@@ -24,10 +35,8 @@ module.exports = {
       Example:
       return queryInterface.createTable('users', { id: Sequelize.INTEGER });
     */
-  },
-
   down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('game_cards');
+    return queryInterface.dropTable('users');
     /*
       Add reverting commands here.
       Return a promise to correctly handle asynchronicity.
