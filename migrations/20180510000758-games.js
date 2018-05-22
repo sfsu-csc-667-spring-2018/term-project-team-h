@@ -20,6 +20,14 @@ module.exports = {
       },
       last_hand: {
         type: Sequelize.INTEGER
+      },
+      game_pot: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
+      cards_played: {
+        type: Sequelize.STRING
       }
     });
     /*
