@@ -13,10 +13,12 @@ module.exports = {
       },
       seat_number: {
         type: Sequelize.INTEGER,
+          defaultValue: 0,
         allowNull: false
       },
       user_bet: {
         type: Sequelize.INTEGER,
+          defaultValue: 0,
         allowNull: false
       }
     });

@@ -1,5 +1,9 @@
 const socket_io = require('socket.io');
 const cookieParser = require('cookie-parser');
+const users = require('../db/users');
+const game_users = require('../db/game_users');
+const games = require('../db/game');
+const cards = require('../db/game_cards');
 
 const io = socket_io();
 
@@ -52,10 +56,48 @@ io.on('connection', function(socket){
 	socket.on('new player', function(data){
 		//TODO: add player to db
 		//		get other Players in table
-		players.push(data.player);
-		let value = parseInt(Math.random()*13) + 1;
-		io.emit(data.table, {player: data.player, action: 'new user', seat: num++, allPlayers: players});
-		io.emit(data.table, {player: data.player, action: 'deal', leftvalue: value, leftsuit: "spades", rightvalue: value, rightsuit: "diamonds"});
+        let seat, players = [];
+        games.getSeatsTaken(data.table).then(result =>{
+            seat = getEmptySeat(result.seats_taken);
+            users.getUserId(data.player).then(result => {
+                game_users.newplayer(parseInt(data.table) , result.user_id).then(result => {
+                    game_users.getAllPlayers(data.table).then(result => {
+                        for(let i = 0; i < result.length; i++){
+                            users.getUserName(result[i].user_id).then(result => {
+                                players.push(result.user_name);
+                                console.log('nfjhhf',players);
+                            }).catch((error) => {
+                                console.log(error);
+                            });
+                        }
+                        setTimeout(function(){
+                            io.emit(data.table, {player: data.player, action: 'new user', seat: seat, allPlayers: players});
+
+                        }, 5000);
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                }).catch((error) => {
+                    console.log(error);
+                });
+                game_users.setseatnumber(seat, result.user_id).catch((error) => {
+                    console.log(error);
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+            let updatedSeats = result.seats_taken + " " + seat;
+            games.updateSeatsTaken(updatedSeats, data.table).catch((error) => {
+                console.log(error);
+            });
+        }).catch((error) => {
+            console.log(error);
+        });
+
+
+
+
+
 	});
 
 	socket.on('check', function(data){
@@ -154,6 +196,15 @@ function dealCards(data){
         };
         //TODO: update player cards and dealt cards in db
         io.emit(data.table, cards);
+    }
+}
+
+function getEmptySeat(data){
+    let seats = data.split(' ');
+    for(let i = 1; i < 5; i++){
+        if(!seats.includes(i)){
+            return i;
+        }
     }
 }
 module.exports = io;
