@@ -12,7 +12,7 @@ const UPDATE_CURRENT_TURN = 'UPDATE games SET current_turn=$1 WHERE game_id=$2 '
 const UPDATE_GAME_POT = 'UPDATE games SET game_pot=$1 WHERE game_id=$2 ';
 const GET_GAME_POT = 'SELECT game_pot FROM games WHERE game_id=$1 ';
 const UPDATE_CARDS_PLAYED = 'UPDATE games SET cards_played=$1 WHERE game_id=$2 ';
-const GET_CARDS_PLAYED = 'SELECT cards_played WHERE game_id=$1 ';
+const GET_CARDS_PLAYED = 'SELECT cards_played FROM games WHERE game_id=$1 ';
 
 const GET_GAME_STATE = 'SELECT game_state FROM games WHERE game_id=$1';
 const UPDATE_GAME_STATE = 'UPDATE games SET game_state=$1 WHERE game_id=$2 ';

@@ -7,7 +7,11 @@ const GET_SEAT_NUMBER = 'SELECT seat_number FROM game_users WHERE user_id=$1 ';
 const UPDATE_USER_BET = 'UPDATE game_users SET user_bet=$1 WHERE user_id=$2 ';
 const GET_USER_BET = 'SELECT user_bet FROM game_users WHERE user_id=$1 ';
 const GET_ALL_PLAYERS = 'SELECT user_id FROM game_users WHERE game_id=$1';
+const GET_NUMBER_OF_PLAYERS = 'SELECT COUNT(user_id) FROM game_users WHERE game_id=$1';
 
+const getNumberOfPlayers = (gameid) => {
+	return db.any(GET_NUMBER_OF_PLAYERS, gameid);
+}
 const getAllPlayers = (gameid) => {
 	return db.any(GET_ALL_PLAYERS, gameid);
 }
@@ -43,5 +47,6 @@ module.exports = {
 	getseatnumber,
 	updatebet,
 	getuserbet,
-	getAllPlayers
+	getAllPlayers,
+	getNumberOfPlayers
 }

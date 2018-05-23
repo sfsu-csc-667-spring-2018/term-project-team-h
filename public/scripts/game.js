@@ -1,10 +1,12 @@
 let player = "", leftPlayer = "yes", rightPlayer = "", topPlayer = "";
 let socket;
-let playerIndex = 0, table;
+let playerIndex = 0, table, userId;
 
 
 $(document).ready(function(){
+    disableButtons();
     player = document.getElementById('user').innerText;
+    userId = document.getElementById('userId').innerText;
     table = window.location.href.split('/');
     table = table[table.length - 1];
     socket = io();
@@ -445,6 +447,8 @@ function winner(data){
 }
 
 function deal(data){
+
+    console.log(data);
     if(data.player == player){
         showPlayerCards({player: player, leftvalue: data.leftvalue, rightvalue: data.rightvalue, leftsuit: data.leftsuit, rightsuit: data.rightsuit});
     }else{

@@ -5,7 +5,7 @@ const Games = require('../db/game');
 /* GET home page. */
 router.get('/', function (req, res, next) {
         // console.log('REQUEST', req.user);
-            res.render('game', {title: 'Game', user: req.user.user_name});
+            res.render('game', {title: 'Game', user: req.user.user_name, user_id: req.user.user_id});
 });
 
 
