@@ -1,35 +1,17 @@
 let player = "", leftPlayer = "yes", rightPlayer = "", topPlayer = "";
 let socket;
-let playerIndex = 0;
-
-//DB VALUES
-let table = 0;
+let playerIndex = 0, table, userId;
 
 
 $(document).ready(function(){
     disableButtons();
-
-    let test = [1, 2, 3];
-
-
-
-
-
-    let hand1 = sortHand([{value: 1, suit: "spades"},{value: 1, suit: "diamonds"}, {value: 3, suit: "spades"}, {value: 4, suit: "clubs"}, {value: 13, suit: "clovers"}, {value: 9, suit:"clubs"}, {value: 11, suit: "diamonds"}]);
-    let hand2 = sortHand([{value: 1, suit: "spades"},{value: 1, suit: "diamonds"}, {value: 3, suit: "spades"}, {value: 4, suit: "clubs"}, {value: 13, suit: "clovers"}, {value: 9, suit:"clubs"}, {value: 11, suit: "diamonds"}]);
-    let hand3 = sortHand([{value: 7, suit: "spades"},{value: 1, suit: "spades"}, {value: 7, suit: "spades"}, {value: 10, suit: "spades"}, {value: 13, suit: "spades"}, {value: 9, suit:"clubs"}, {value: 2, suit: "diamonds"}]);
-    let hand4 = sortHand([{value: 7, suit: "spades"},{value: 1, suit: "diamonds"}, {value: 7, suit: "spades"}, {value: 10, suit: "clubs"}, {value: 13, suit: "clovers"}, {value: 9, suit:"clubs"}, {value: 2, suit: "diamonds"}]);
-
-    console.log(evaluateHand(hand1));
-    console.log(compareHands([evaluateHand(hand1),  evaluateHand(hand2)]));
-
-    player = Math.random() * 100;
-    hidePlayerCards(leftPlayer);
-    showBackOfCards(leftPlayer);
-
+    player = document.getElementById('user').innerText;
+    userId = document.getElementById('userId').innerText;
+    table = window.location.href.split('/');
+    table = table[table.length - 1];
     socket = io();
+    console.log(player + " "+ table);
     //Player and Table will given body of get request after user clicks create game/join game
-    table = 1;
     socket.emit('new player', {player: player, table: table});
     
     
@@ -342,8 +324,15 @@ function setDealer(data){
             document.getElementById('right-blind').hidden = false;
             break;
     }
-}
 
+    if (document.getElementById("slider").value / 100 * parseInt(document.getElementById("playeramount").innerHTML) < currentbet + 25) {
+        document.getElementById("rangevalue").value = currentbet + 25;
+    } else {
+        document.getElementById("rangevalue").value = document.getElementById("slider").value / 100 * parseInt(document.getElementById("playeramount").innerHTML);
+    }
+
+
+}
 function setSmallBlind(data){
     switch(data){
         case player:
@@ -465,6 +454,8 @@ function winner(data){
 }
 
 function deal(data){
+
+    console.log(data);
     if(data.player == player){
         showPlayerCards({player: player, leftvalue: data.leftvalue, rightvalue: data.rightvalue, leftsuit: data.leftsuit, rightsuit: data.rightsuit});
     }else{

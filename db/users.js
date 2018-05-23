@@ -4,6 +4,17 @@ const db = require('./index');
 const CREATE_INSERT =
     'INSERT INTO users (user_name, user_email, user_password, user_money) VALUES ($1, $2, $3, $4) RETURNING user_id, user_name, user_email, user_money';
 
+const GET_USERNAME = 'SELECT user_name FROM users WHERE user_id=$1';
+const GET_USERID = 'SELECT user_id FROM users WHERE user_name=$1';
+
+const getUserName = (userid) => {
+    return db.one(GET_USERNAME, userid);
+}
+
+const getUserId = (username) => {
+    return db.one(GET_USERID, username);
+}
+
 const create = (name, email, password, money) => {
 
 
@@ -43,5 +54,7 @@ module.exports = {
     create,
     find,
     serialize,
-    deserialize
+    deserialize,
+    getUserName,
+    getUserId
 };

@@ -1,5 +1,9 @@
 const socket_io = require('socket.io');
 const cookieParser = require('cookie-parser');
+const users = require('../db/users');
+const game_users = require('../db/game_users');
+const games = require('../db/game');
+const game_cards = require('../db/game_cards');
 
 const io = socket_io();
 
@@ -52,10 +56,50 @@ io.on('connection', function(socket){
 	socket.on('new player', function(data){
 		//TODO: add player to db
 		//		get other Players in table
-		players.push(data.player);
-		let value = parseInt(Math.random()*13) + 1;
-		io.emit(data.table, {player: data.player, action: 'new user', seat: num++, allPlayers: players});
-		io.emit(data.table, {player: data.player, action: 'deal', leftvalue: value, leftsuit: "spades", rightvalue: value, rightsuit: "diamonds"});
+        let seat, players = [];
+        games.getSeatsTaken(data.table).then(result =>{
+            seat = getEmptySeat(result.seats_taken);
+            users.getUserId(data.player).then(result => {
+                game_users.newplayer(parseInt(data.table) , result.user_id).then(result => {
+                    game_users.getAllPlayers(data.table).then(result => {
+                        for(let i = 0; i < result.length; i++){
+                            users.getUserName(result[i].user_id).then(result => {
+                                players.push(result.user_name);
+                            }).catch((error) => {
+                                console.log(error);
+                            });
+                        }
+                        setTimeout(function(){
+                            io.emit(data.table, {player: data.player, action: 'new user', seat: seat, allPlayers: players});
+
+                        }, 5000);
+                    }).catch((error) => {
+                        console.log(error);
+                    });
+                }).catch((error) => {
+                    console.log(error);
+                });
+                game_users.setseatnumber(seat, result.user_id).catch((error) => {
+                    console.log(error);
+                });
+            }).catch((error) => {
+                console.log(error);
+            });
+            let updatedSeats = result.seats_taken + " " + seat;
+            games.updateSeatsTaken(updatedSeats, data.table).catch((error) => {
+                console.log(error);
+            });
+        }).catch((error) => {
+            console.log(error);
+        });
+
+        games.getCardsPlayed(data.table).then(result => {
+            let c = result.cards_played.split(" ");
+            dealCards({game_id: data.table, player: players, dealtCards: c});
+        }).catch((error) => {
+            console.log(error);
+        });
+
 	});
 
 	socket.on('check', function(data){
@@ -67,23 +111,15 @@ io.on('connection', function(socket){
 
 });
 
-
-
-
-
 function getCards(data) {
-    let done = false, card, dealtCards = data.dealtCards, count = 0, result = [];
-    while(!done) {
-        card = parseInt(Math.random() * 52) + 1;
+    let card, dealtCards = data.dealtCards, count = 0, result = [];
+    while(count != data.numberOfCards) {
+        card = parseInt(Math.random() * 51) + 1;
         if (!(dealtCards.includes(card))) {
             dealtCards.push(card);
             result.push(card);
-            count++;
+            game_cards.newgamecard(data.game_id, data.user_id, result[count++].user_id);
         }
-        if (count === data.numberOfCards) {
-            done = true;
-        }
-
         //TODO: update dealt cards in db
     }
     return result;
@@ -92,10 +128,10 @@ function getCards(data) {
 function convertSuit(data){
     let result;
     switch(data){
-        case 1: result = "Spades";break;
-        case 2: result = "Clubs";break;
-        case 3: result = "Diamonds";break;
-        case 0: result = "Hearts";break;
+        case 1: result = "spades";break;
+        case 2: result = "clubs";break;
+        case 3: result = "diamonds";break;
+        case 0: result = "hearts";break;
     }
     return result;
 }
@@ -141,19 +177,37 @@ function setRiver(data) {
 }
 
 function dealCards(data){
-    let cards;
-    for(let i = 0; i < data.players.length; i++){
-        cards = getCards({numberOfCards: 2, dealtCards: data.dealtCards});
-        cards  = {
-            leftvalue: cards[0] % 13 + 1,
-            rightvalue: cards[1] % 13 + 1,
-            leftsuit: convertSuit(parseInt((cards[0] - 1) / 13)),
-            rightsuit: convertSuit(parseInt((cards[1] - 1) / 13)),
-            action: "deal",
-            player: data.player[i]
-        };
-        //TODO: update player cards and dealt cards in db
-        io.emit(data.table, cards);
+    let cards, dcards = data.dealtCards;
+    game_users.getNumberOfPlayers(data.game_id).then(result => {
+        for(let i = 0; i < result[0].count; i++){
+            users.getUserId(data.player[i]).then(result => {
+                cards = getCards({numberOfCards: 2, dealtCards: dcards, user_id: result.user_id, game_id: data.game_id});
+                cards  = {
+                    leftvalue: cards[0] % 13 + 1,
+                    rightvalue: cards[1] % 13 + 1,
+                    leftsuit: convertSuit(parseInt((cards[0] - 1) / 13)),
+                    rightsuit: convertSuit(parseInt((cards[1] - 1) / 13)),
+                    action: "deal",
+                    player: data.player[i]
+                };
+                dcards.push(cards[0]);
+                dcards.push(cards[1]);
+                //TODO: update player cards and dealt cards in db
+                console.log('GAME ID',data.game_id);
+                io.emit(data.game_id, cards);
+            }).catch((error) => {
+                console.log(error);
+            });
+        }
+    });
+}
+
+function getEmptySeat(data){
+    let seats = data.split(' ');
+    for(let i = 1; i < 5; i++){
+        if(!seats.includes(i)){
+            return i;
+        }
     }
 }
 module.exports = io;

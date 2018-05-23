@@ -20,7 +20,29 @@ module.exports = {
       },
       last_hand: {
         type: Sequelize.INTEGER
-      }
+
+      },
+      game_pot: {
+        type: Sequelize.INTEGER,
+        allowNull: false,
+        defaultValue: 0
+      },
+      cards_played: {
+        type: Sequelize.STRING,
+          defaultValue: ""
+      },
+        seats_taken: {
+        type: Sequelize.STRING,
+            defaultValue: "0"
+        },
+        game_state: {
+        type: Sequelize.INTEGER,
+            defaultValue: 0
+        },
+        community: {
+        type: Sequelize.STRING,
+            allowNull: true
+        }
     });
     /*
       Add altering commands here.

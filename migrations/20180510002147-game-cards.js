@@ -9,7 +9,8 @@ module.exports = {
       },
       user_id: {
         type: Sequelize.INTEGER,
-        allowNull: false
+        allowNull: false,
+        defaultValue: 0
       },
       card_id: {
         type: Sequelize.INTEGER,
